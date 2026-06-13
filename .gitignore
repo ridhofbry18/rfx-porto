@@ -1,0 +1,36 @@
+# Dependencies
+/node_modules
+/Next.js-Portfolio
+# Build artifacts
+/dist
+/build
+/.next
+/out
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Log files
+*.log
+npm-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# IDE and OS files
+.idea/
+.vscode/
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# Vercel
+.vercel
+
+# Other
+.DS_Store
