@@ -11,29 +11,38 @@ import { useData } from '@/components/DataProvider'
 // Utility function copied from helpers if needed, or implement here:
 const getYoutubeId = (url) => {
   if (!url) return null;
-  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+  const regExp = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/|youtube\.com\/shorts\/|youtube\/)([^"&?\/\s]{11})/i;
   const match = url.match(regExp);
-  return (match && match[2].length === 11) ? match[2] : null;
+  return match ? match[1] : null;
 };
 
 const VideoModal = ({ isOpen, onClose, videoUrl, videoType }) => {
   if (!isOpen) return null;
   
+  const videoId = getYoutubeId(videoUrl);
+  const isYoutube = videoType === 'youtube' || (videoUrl && (videoUrl.includes('youtube') || videoUrl.includes('youtu.be')));
+  const isShorts = videoUrl && videoUrl.includes('shorts');
+  const isVideoFile = !isYoutube && videoUrl && videoUrl.match(/\.(mp4|mov|webm|ogg)(\?.*)?$/i);
+
   const getYoutubeEmbedUrl = (url) => {
-    const videoId = getYoutubeId(url);
     if (!videoId) return '';
     return `https://www.youtube.com/embed/${videoId}?autoplay=1&controls=0&disablekb=1&modestbranding=1&rel=0&fs=0&playsinline=1`;
   };
 
-  const isYoutube = videoType === 'youtube' || (videoUrl && (videoUrl.includes('youtube') || videoUrl.includes('youtu.be')));
-  const isVideoFile = !isYoutube && videoUrl && videoUrl.match(/\.(mp4|mov|webm|ogg)(\?.*)?$/i);
+  // Determine container classes based on aspect ratio
+  const containerClasses = isShorts 
+    ? "w-full max-w-sm aspect-[9/16]" // For Shorts
+    : "w-full max-w-5xl aspect-video"; // For standard 16:9
 
   return (
-    <div className="fixed inset-0 z-[150] flex items-center justify-center bg-black/95 backdrop-blur-md p-4 sm:p-8">
+    <div className="fixed inset-0 z-[150] flex items-center justify-center bg-black/95 backdrop-blur-md p-4 sm:p-8" onClick={onClose}>
       <button onClick={onClose} className="absolute top-6 right-6 text-white hover:text-logo-red transition-colors z-[160]">
         <X className="w-8 h-8" />
       </button>
-      <div className="w-full max-w-5xl aspect-video rounded-2xl overflow-hidden bg-zinc-900 border border-white/10 shadow-[0_0_50px_rgba(232,69,77,0.3)] relative flex items-center justify-center">
+      <div 
+        className={`${containerClasses} rounded-2xl overflow-hidden bg-zinc-900 border border-white/10 shadow-[0_0_50px_rgba(232,69,77,0.3)] relative flex items-center justify-center`}
+        onClick={e => e.stopPropagation()} // Prevent closing when clicking inside video
+      >
         {isYoutube ? (
           getYoutubeEmbedUrl(videoUrl) ? (
             <iframe 
@@ -61,9 +70,10 @@ const VideoModal = ({ isOpen, onClose, videoUrl, videoType }) => {
         ) : (
           <iframe 
             src={videoUrl} 
-            className="w-full h-full pointer-events-none"
+            className="w-full h-full"
             frameBorder="0" 
             allow="autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+            allowFullScreen
           />
         )}
       </div>

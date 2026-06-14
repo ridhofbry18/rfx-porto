@@ -2,14 +2,9 @@ export const getYoutubeId = (url) => {
   if (!url) return null;
   const trimmed = String(url).trim();
   if (/^[A-Za-z0-9_-]{11}$/.test(trimmed)) return trimmed;
-  if (trimmed.includes('youtube/') && !trimmed.includes('watch?')) {
-    const parts = trimmed.split('youtube/');
-    const id = parts[1] ? parts[1].split('?')[0] : null;
-    return id && /^[A-Za-z0-9_-]{11}$/.test(id) ? id : null;
-  }
-  const regExp = /^.*(?:youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+  const regExp = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/|youtube\.com\/shorts\/|youtube\/)([^"&?\/\s]{11})/i;
   const match = trimmed.match(regExp);
-  return (match && match[1] && match[1].length === 11) ? match[1] : null;
+  return match ? match[1] : null;
 };
 
 export const convertImageLink = (url) => {
