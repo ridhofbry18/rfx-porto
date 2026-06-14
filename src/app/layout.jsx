@@ -55,8 +55,8 @@ export const metadata = {
     canonical: 'https://rfxvisual.my.id',
   },
   icons: {
-    icon: '/logo.png',
-    apple: '/logo.png',
+    icon: '/icon.png',
+    apple: '/icon.png',
   },
 }
 
