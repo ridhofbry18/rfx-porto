@@ -5,11 +5,22 @@ import { useRouter } from 'next/navigation';
 import { ChevronLeft, X, ExternalLink, Download } from 'lucide-react';
 import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas";
-import { defaultTemplates } from '@/utils/constants';
+import { useData } from '@/components/DataProvider';
 
 const OrderWebContent = () => {
   const router = useRouter();
-  const templates = defaultTemplates; // Menggunakan template statis dari constants
+  const { daftarWebsite } = useData();
+  const templates = (daftarWebsite || []).map(site => ({
+    id: site.id,
+    title: site.title,
+    description: site.description || site.subtitle || 'Template website portofolio siap pakai dari RFX Visual.',
+    price: site.price || 'Hubungi Admin',
+    normalPrice: site.normal_price || site.normalPrice || '',
+    demoUrl: site.demo_url || site.demoUrl || site.link_web || '#',
+    image: site.link_preview || 'https://placehold.co/600x400/111/222?text=RFX+Web',
+    badge: site.badge || 'WEB',
+    features: Array.isArray(site.features) ? site.features : String(site.features || '').split('\n').map(item => item.trim()).filter(Boolean)
+  }));
   const [selectedTemplate, setSelectedTemplate] = useState(null);
   const [checkoutNama, setCheckoutNama] = useState('');
   const [checkoutEmail, setCheckoutEmail] = useState('');
@@ -165,14 +176,18 @@ Saya telah mendownload invoice. Mohon info nomor rekening / QRIS untuk pembayara
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {templates.map(tpl => (
+          {templates.length === 0 ? (
+            <div className="col-span-full rounded-[2rem] border border-white/10 bg-zinc-900/40 p-10 text-center">
+              <p className="text-sm text-zinc-400">Belum ada produk website. Tambahkan data melalui Admin Panel &gt; Website.</p>
+            </div>
+          ) : templates.map(tpl => (
             <div key={tpl.id} className="bg-zinc-900/40 border border-white/5 hover:border-blue-500/30 rounded-[2rem] overflow-hidden transition-all group flex flex-col">
               <div className="aspect-video bg-zinc-800 relative overflow-hidden">
                 <img src={tpl.image} alt={tpl.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
                 <div className="absolute inset-0 bg-gradient-to-t from-zinc-900/90 to-transparent"></div>
                 <div className="absolute bottom-4 left-4 right-4 flex justify-between items-end">
                   <h3 className="text-xl font-black uppercase tracking-wide">{tpl.title}</h3>
-                  <span className="bg-blue-600 text-white px-3 py-1 rounded-full text-[10px] font-bold tracking-widest shadow-lg">PROMO</span>
+                  <span className="bg-blue-600 text-white px-3 py-1 rounded-full text-[10px] font-bold tracking-widest shadow-lg">{tpl.badge}</span>
                 </div>
               </div>
 
@@ -189,12 +204,13 @@ Saya telah mendownload invoice. Mohon info nomor rekening / QRIS untuk pembayara
                     </div>
                   ))}
                   {tpl.features.length > 3 && <div className="text-[10px] text-zinc-600 italic pl-3.5">+ {tpl.features.length - 3} fitur lainnya</div>}
+                  {tpl.features.length === 0 && <div className="text-[10px] text-zinc-600 italic">Fitur dapat diatur dari Admin Panel.</div>}
                 </div>
 
                 <div className="pt-6 border-t border-white/5 flex items-center justify-between mb-6">
                   <div>
                     <p className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold mb-1">Harga Normal</p>
-                    <p className="text-xs text-zinc-600 line-through font-mono">Rp 350.000</p>
+                    <p className="text-xs text-zinc-600 line-through font-mono">{tpl.normalPrice}</p>
                   </div>
                   <div className="text-right">
                     <p className="text-[10px] text-blue-400 uppercase tracking-widest font-bold mb-1">Sekarang Hanya</p>

@@ -5,7 +5,7 @@ import { motion } from 'framer-motion'
 import AnimatedText from '@/components/AnimatedText'
 import Layout from '@/components/Layout'
 import TransitionEffect from '@/components/TransitionEffect'
-import { ExternalLink, Play, X, Clapperboard, Camera, Film, Globe } from 'lucide-react'
+import { ExternalLink, Play, X, Clapperboard, Camera, Film, Globe, Sparkles } from 'lucide-react'
 import { useData } from '@/components/DataProvider'
 
 // Utility function copied from helpers if needed, or implement here:
@@ -85,9 +85,10 @@ const FeaturedProject = ({ category, type, title, summary, img, link, videoType,
   const isVideoContent = ['video', 'animation'].includes(category?.toLowerCase());
 
   return (
-    <article className="w-full flex flex-col lg:flex-row items-center justify-between relative rounded-2xl lg:rounded-3xl lg:rounded-br-2xl border border-solid border-logo-red/20 bg-logo-red/5 backdrop-blur-2xl shadow-2xl p-6 sm:p-8 lg:p-12 mb-16">
-      <div className="absolute top-0 -right-2 sm:-right-3 -z-10 w-[101%] h-[102%] sm:h-[103%] rounded-[1.5rem] sm:rounded-[2rem] lg:rounded-[2.5rem] bg-logo-red/50 blur-sm lg:rounded-br-3xl" />
-      <div className="w-full lg:w-1/2 cursor-pointer overflow-hidden rounded-xl">
+    <article className="group w-full flex flex-col lg:flex-row items-center justify-between relative rounded-[1.75rem] lg:rounded-[2.25rem] border border-white/10 bg-[radial-gradient(circle_at_15%_15%,rgba(255,255,255,0.11),transparent_32%),linear-gradient(135deg,rgba(24,24,27,0.92),rgba(5,5,5,0.96))] backdrop-blur-2xl shadow-[0_24px_80px_rgba(0,0,0,0.42)] p-5 sm:p-7 lg:p-10 mb-16 overflow-hidden">
+      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-[radial-gradient(circle_at_85%_20%,rgba(255,255,255,0.12),transparent_30%)]" />
+      <div className="absolute -bottom-24 -right-24 w-64 h-64 rounded-full bg-white/5 blur-3xl" />
+      <div className="relative w-full lg:w-[54%] cursor-pointer overflow-hidden rounded-[1.25rem] border border-white/10 bg-black">
         <motion.img 
           src={img} 
           alt={title} 
@@ -97,17 +98,17 @@ const FeaturedProject = ({ category, type, title, summary, img, link, videoType,
         />
       </div>
 
-      <div className="w-full lg:w-1/2 flex flex-col items-start justify-between pt-6 lg:pt-0 lg:pl-10">
-        <span className="text-logo-red text-outline-white font-bold text-sm sm:text-base md:text-xl uppercase tracking-widest">{type}</span>
-        <h2 className="my-2 sm:my-3 w-full text-left text-2xl sm:text-3xl md:text-4xl font-black uppercase font-display">{title}</h2>
+      <div className="relative w-full lg:w-[46%] flex flex-col items-start justify-between pt-6 lg:pt-0 lg:pl-10">
+        <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-zinc-200 font-bold text-[10px] sm:text-xs uppercase tracking-[0.28em]"><Sparkles className="w-3 h-3" />{type}</span>
+        <h2 className="my-3 sm:my-4 w-full text-left text-2xl sm:text-3xl md:text-5xl font-black uppercase font-display leading-none">{title}</h2>
         <p className="my-2 sm:my-3 font-medium text-zinc-300 text-sm sm:text-base">{summary}</p>
         <div className="mt-4 flex items-center">
           {isVideoContent ? (
-            <button onClick={() => onOpenVideo(link, videoType)} className="rounded-xl bg-white text-black p-3 px-6 sm:px-8 text-sm sm:text-base font-bold hover:bg-logo-red hover:text-white transition-colors flex gap-2 items-center shadow-[0_0_20px_rgba(232,69,77,0.3)]">
+            <button onClick={() => onOpenVideo(link, videoType)} className="rounded-2xl bg-white text-black p-3 px-6 sm:px-8 text-sm sm:text-base font-bold hover:bg-zinc-200 transition-colors flex gap-2 items-center shadow-[0_16px_35px_rgba(255,255,255,0.12)]">
               <Play className="w-4 h-4"/> Play Video
             </button>
           ) : (
-            <a href={link} target="_blank" rel="noopener noreferrer" className="rounded-xl bg-white text-black p-3 px-6 sm:px-8 text-sm sm:text-base font-bold hover:bg-logo-red hover:text-white transition-colors flex gap-2 items-center shadow-lg">
+            <a href={link} target="_blank" rel="noopener noreferrer" className="rounded-2xl bg-white text-black p-3 px-6 sm:px-8 text-sm sm:text-base font-bold hover:bg-zinc-200 transition-colors flex gap-2 items-center shadow-[0_16px_35px_rgba(255,255,255,0.12)]">
               <ExternalLink className="w-4 h-4"/> Visit Project
             </a>
           )}
@@ -121,9 +122,9 @@ const Project = ({ category, title, type, img, link, videoType, onOpenVideo }) =
   const isVideoContent = ['video', 'animation'].includes(category?.toLowerCase());
 
   return (
-    <article className="w-full flex flex-col items-center justify-center rounded-2xl border border-solid border-logo-red/20 bg-logo-red/5 backdrop-blur-2xl p-4 sm:p-6 relative">
-      <div className="absolute top-0 -right-2 sm:-right-3 -z-10 w-[101%] h-[102%] sm:h-[103%] rounded-[1.5rem] sm:rounded-[2rem] bg-logo-red/30 blur-sm" />
-      <div className="w-full cursor-pointer overflow-hidden rounded-xl">
+    <article className="group w-full flex flex-col items-center justify-center rounded-[1.75rem] border border-white/10 bg-[linear-gradient(145deg,rgba(39,39,42,0.88),rgba(9,9,11,0.96))] backdrop-blur-2xl p-4 sm:p-5 relative overflow-hidden shadow-[0_22px_60px_rgba(0,0,0,0.35)]">
+      <div className="absolute -top-20 -right-20 w-48 h-48 rounded-full bg-white/5 blur-3xl group-hover:bg-white/10 transition-colors" />
+      <div className="relative w-full cursor-pointer overflow-hidden rounded-[1.2rem] border border-white/10 bg-black">
         <motion.img 
           src={img} 
           alt={title} 
@@ -134,7 +135,7 @@ const Project = ({ category, title, type, img, link, videoType, onOpenVideo }) =
       </div>
 
       <div className="w-full flex flex-col items-start justify-between mt-4 sm:mt-6">
-        <span className="text-logo-red text-outline-white font-bold text-xs sm:text-sm lg:text-base uppercase tracking-widest">{type}</span>
+        <span className="text-zinc-300 font-bold text-[10px] sm:text-xs uppercase tracking-[0.26em]">{type}</span>
         <h2 className="my-1 sm:my-2 w-full text-left text-xl sm:text-2xl lg:text-3xl font-bold line-clamp-2 uppercase font-display">{title}</h2>
         <div className="w-full mt-3 sm:mt-4 flex items-center justify-between">
           {isVideoContent ? (

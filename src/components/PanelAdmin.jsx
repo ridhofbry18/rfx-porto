@@ -26,7 +26,7 @@ const PanelAdmin = ({
 
   const [skillBaru, setSkillBaru] = useState({ title: '', level: 50, category: 'software' });
   const [expBaru, setExpBaru] = useState({ year: '', title: '', company: '', description: '', icon: 'Camera' });
-  const [webBaru, setWebBaru] = useState({ title: '', link_web: '', link_preview: '' });
+  const [webBaru, setWebBaru] = useState({ title: '', link_web: '', link_preview: '', description: '', price: '', normal_price: '', badge: '', features: '' });
   const [pricelistBaru, setPricelistBaru] = useState({ title: '', subtitle: '', packages: [], extra_info: [], terms: [] });
   const [artikelBaru, setArtikelBaru] = useState({ title: '', date: '', image: '', content: '' });
   const [isPdfExtracting, setIsPdfExtracting] = useState(false);
@@ -115,7 +115,7 @@ Text to extract: ${text}`;
     setIsFormBuka(false);
     setSkillBaru({ title: '', level: 50, category: 'software' });
     setExpBaru({ year: '', title: '', company: '', description: '', icon: 'Camera' });
-    setWebBaru({ title: '', link_web: '', link_preview: '' });
+    setWebBaru({ title: '', link_web: '', link_preview: '', description: '', price: '', normal_price: '', badge: '', features: '' });
     setPricelistBaru({ title: '', subtitle: '', packages: [], extra_info: [], terms: [] });
     setArtikelBaru({ title: '', date: '', image: '', content: '' });
     setModeFoto('url'); setModeVideo('youtube'); setModePreviewWeb('url');
@@ -355,7 +355,14 @@ Text to extract: ${text}`;
                     <form onSubmit={(e) => { e.preventDefault(); handleSimpanWebsite(webBaru, idEdit, resetForms); }} className="space-y-4">
                       <h4 className="text-white font-bold uppercase tracking-widest text-xs">Tambah/Edit Website</h4>
                       <input type="text" placeholder="Judul Website" className="w-full bg-zinc-900 border border-white/10 rounded-2xl px-5 py-4 text-white text-xs" value={webBaru.title} onChange={e => setWebBaru({ ...webBaru, title: e.target.value })} required />
-                      <input type="url" placeholder="Link Web (https://...)" className="w-full bg-zinc-900 border border-white/10 rounded-2xl px-5 py-4 text-white text-xs" value={webBaru.link_web} onChange={e => setWebBaru({ ...webBaru, link_web: e.target.value })} />
+                      <input type="url" placeholder="Link Web / Demo (https://...)" className="w-full bg-zinc-900 border border-white/10 rounded-2xl px-5 py-4 text-white text-xs" value={webBaru.link_web} onChange={e => setWebBaru({ ...webBaru, link_web: e.target.value })} />
+                      <textarea placeholder="Deskripsi produk web store" rows="3" className="w-full bg-zinc-900 border border-white/10 rounded-2xl px-5 py-4 text-white text-xs" value={webBaru.description || ''} onChange={e => setWebBaru({ ...webBaru, description: e.target.value })} />
+                      <div className="grid grid-cols-3 gap-3">
+                        <input type="text" placeholder="Harga (Rp ...)" className="w-full bg-zinc-900 border border-white/10 rounded-2xl px-5 py-4 text-white text-xs" value={webBaru.price || ''} onChange={e => setWebBaru({ ...webBaru, price: e.target.value })} />
+                        <input type="text" placeholder="Harga coret" className="w-full bg-zinc-900 border border-white/10 rounded-2xl px-5 py-4 text-white text-xs" value={webBaru.normal_price || ''} onChange={e => setWebBaru({ ...webBaru, normal_price: e.target.value })} />
+                        <input type="text" placeholder="Badge" className="w-full bg-zinc-900 border border-white/10 rounded-2xl px-5 py-4 text-white text-xs" value={webBaru.badge || ''} onChange={e => setWebBaru({ ...webBaru, badge: e.target.value })} />
+                      </div>
+                      <textarea placeholder="Fitur (1 baris = 1 fitur)" rows="4" className="w-full bg-zinc-900 border border-white/10 rounded-2xl px-5 py-4 text-white text-xs" value={webBaru.features || ''} onChange={e => setWebBaru({ ...webBaru, features: e.target.value })} />
 
                       {/* Preview Image — URL atau Upload */}
                       <div className="space-y-2">
@@ -410,7 +417,7 @@ Text to extract: ${text}`;
                         <div className="w-10 h-10 rounded-lg bg-zinc-800 flex items-center justify-center text-zinc-500 shrink-0"><ExternalLink className="w-4 h-4" /></div>
                         <div className="flex-1 truncate text-xs font-bold text-white">{site.title}</div>
                         <div className="flex gap-1">
-                          <button onClick={() => { setWebBaru({ title: site.title, link_web: site.link_web || '', link_preview: site.link_preview || '' }); setIdEdit(site.id); setIsFormBuka(true); }} className="p-2 text-zinc-500 hover:text-white"><Edit className="w-3 h-3" /></button>
+                          <button onClick={() => { setWebBaru({ title: site.title, link_web: site.link_web || '', link_preview: site.link_preview || '', description: site.description || '', price: site.price || '', normal_price: site.normal_price || '', badge: site.badge || '', features: Array.isArray(site.features) ? site.features.join('\n') : (site.features || '') }); setIdEdit(site.id); setIsFormBuka(true); }} className="p-2 text-zinc-500 hover:text-white"><Edit className="w-3 h-3" /></button>
                           <button onClick={() => tanganiHapusWebsite(site.id)} className="p-2 text-zinc-500 hover:text-red-500"><Trash2 className="w-3 h-3" /></button>
                         </div>
                       </div>
