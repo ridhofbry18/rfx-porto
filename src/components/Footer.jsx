@@ -55,7 +55,7 @@ const Footer = () => {
           <a href="https://instagram.com/rfx.visual" target="_blank" rel="noopener noreferrer" className="rounded-full border border-white/60 px-4 py-1 text-sm uppercase tracking-widest transition hover:border-[#F6D232] hover:text-[#F6D232]">Instagram</a>
           <a href="https://x.com/rfxvisual" target="_blank" rel="noopener noreferrer" className="rounded-full border border-white/60 px-4 py-1 text-sm uppercase tracking-widest transition hover:border-[#F6D232] hover:text-[#F6D232]">X</a>
         </div>
-        <div className="text-sm text-zinc-300">Crafted by <span className="font-display font-black uppercase tracking-widest text-[#F6D232]">Dumemearts</span></div>
+        <div className="text-sm text-zinc-300">Crafted by <span className="font-display font-black uppercase tracking-widest text-[#F6D232]">RIDHO FEBRIYANSYAH</span></div>
       </div>
     </footer>
   )
