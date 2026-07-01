@@ -353,9 +353,15 @@ Text to extract: ${text}`;
                 <div className="flex flex-col md:flex-row gap-10">
                   <div className={`flex-1 space-y-6 ${isFormBuka ? 'block' : 'hidden md:block'}`}>
                     <form onSubmit={(e) => { e.preventDefault(); handleSimpanWebsite(webBaru, idEdit, resetForms); }} className="space-y-4">
-                      <h4 className="text-white font-bold uppercase tracking-widest text-xs">Tambah/Edit Website</h4>
-                      <input type="text" placeholder="Judul Website" className="w-full bg-zinc-900 border border-white/10 rounded-2xl px-5 py-4 text-white text-xs" value={webBaru.title} onChange={e => setWebBaru({ ...webBaru, title: e.target.value })} required />
-                      <input type="url" placeholder="Link Web / Demo (https://...)" className="w-full bg-zinc-900 border border-white/10 rounded-2xl px-5 py-4 text-white text-xs" value={webBaru.link_web} onChange={e => setWebBaru({ ...webBaru, link_web: e.target.value })} />
+                      <div className="space-y-1">
+                        <h4 className="text-white font-bold uppercase tracking-widest text-xs">Tambah/Edit Website / Produk Order Web</h4>
+                        <p className="text-[10px] text-zinc-500 leading-relaxed">Data di tab ini dipakai juga untuk card Web Store di halaman /rfx-links/orderweb. Link Web menjadi tombol Preview Demo, sedangkan Preview Image menjadi thumbnail card.</p>
+                      </div>
+                      <input type="text" placeholder="Judul Website / Produk" className="w-full bg-zinc-900 border border-white/10 rounded-2xl px-5 py-4 text-white text-xs" value={webBaru.title} onChange={e => setWebBaru({ ...webBaru, title: e.target.value })} required />
+                      <div className="space-y-1">
+                        <label className="text-[10px] text-zinc-500 uppercase font-bold tracking-widest">Link Demo / Preview Web</label>
+                        <input type="url" placeholder="https://demo-template-anda.com" className="w-full bg-zinc-900 border border-white/10 rounded-2xl px-5 py-4 text-white text-xs" value={webBaru.link_web} onChange={e => setWebBaru({ ...webBaru, link_web: e.target.value })} />
+                      </div>
                       <textarea placeholder="Deskripsi produk web store" rows="3" className="w-full bg-zinc-900 border border-white/10 rounded-2xl px-5 py-4 text-white text-xs" value={webBaru.description || ''} onChange={e => setWebBaru({ ...webBaru, description: e.target.value })} />
                       <div className="grid grid-cols-3 gap-3">
                         <input type="text" placeholder="Harga (Rp ...)" className="w-full bg-zinc-900 border border-white/10 rounded-2xl px-5 py-4 text-white text-xs" value={webBaru.price || ''} onChange={e => setWebBaru({ ...webBaru, price: e.target.value })} />
@@ -367,19 +373,19 @@ Text to extract: ${text}`;
                       {/* Preview Image — URL atau Upload */}
                       <div className="space-y-2">
                         <div className="flex items-center gap-2">
-                          <span className="text-[10px] text-zinc-500 uppercase tracking-widest font-semibold">Preview Image</span>
+                          <span className="text-[10px] text-zinc-500 uppercase tracking-widest font-semibold">Thumbnail Card / Preview Image</span>
                           <div className="flex gap-1 ml-auto">
                             <button type="button" onClick={() => setModePreviewWeb('url')} className={`px-3 py-1 rounded-lg text-[10px] font-bold transition-all ${modePreviewWeb === 'url' ? 'bg-zinc-700 text-white' : 'text-zinc-600 hover:text-zinc-400'}`}>URL</button>
                             <button type="button" onClick={() => setModePreviewWeb('upload')} className={`px-3 py-1 rounded-lg text-[10px] font-bold transition-all ${modePreviewWeb === 'upload' ? 'bg-blue-700 text-white' : 'text-zinc-600 hover:text-zinc-400'}`}>Upload</button>
                           </div>
                         </div>
                         {modePreviewWeb === 'url' ? (
-                          <input type="url" placeholder="Link Preview / GDrive Screenshot" className="w-full bg-zinc-900 border border-white/10 rounded-2xl px-5 py-4 text-white text-xs" value={webBaru.link_preview} onChange={e => setWebBaru({ ...webBaru, link_preview: e.target.value })} onBlur={e => setWebBaru({ ...webBaru, link_preview: convertImageLink(e.target.value) })} />
+                          <input type="url" placeholder="Link thumbnail / screenshot / GDrive" className="w-full bg-zinc-900 border border-white/10 rounded-2xl px-5 py-4 text-white text-xs" value={webBaru.link_preview} onChange={e => setWebBaru({ ...webBaru, link_preview: e.target.value })} onBlur={e => setWebBaru({ ...webBaru, link_preview: convertImageLink(e.target.value) })} />
                         ) : (
                           <div className="space-y-2">
                             <label className="block w-full border-2 border-dashed border-zinc-700 hover:border-blue-600 rounded-2xl px-5 py-4 text-center cursor-pointer transition-colors">
                               <ImageIcon className="w-5 h-5 text-zinc-600 mx-auto mb-1" />
-                              <span className="text-[10px] text-zinc-500">Pilih screenshot (max 5MB)</span>
+                              <span className="text-[10px] text-zinc-500">Upload thumbnail card / screenshot (max 5MB)</span>
                               <input type="file" accept="image/*" className="hidden" onChange={async (ev) => {
                                 const file = ev.target.files[0]; if (!file) return;
                                 setFotoUploading(true); setFotoProgress(0); setUploadError('');
