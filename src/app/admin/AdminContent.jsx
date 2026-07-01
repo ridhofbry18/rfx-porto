@@ -217,7 +217,7 @@ const AdminContent = () => {
 
   const handleSimpanWebsite = async (webData, editId, onSuccess) => {
     try {
-      const payload = { title: webData.title, link_web: webData.link_web, link_preview: webData.link_preview };
+      const payload = { title: webData.title, link_web: webData.link_web, link_preview: webData.link_preview, description: webData.description, price: webData.price, normal_price: webData.normal_price, badge: webData.badge, features: webData.features };
       if (editId) {
         const { error } = await supabase.from('websites').update(payload).eq('id', editId);
         if (error) throw error;

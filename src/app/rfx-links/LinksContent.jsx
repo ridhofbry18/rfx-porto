@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { Instagram, MessageCircle, AlertCircle, ArrowRight, ExternalLink, Image as ImageIcon, Menu, X, ShoppingCart, Sun, Moon } from 'lucide-react';
 import { useData } from '@/components/DataProvider';
@@ -24,13 +25,21 @@ const LinksContent = () => {
   const bgImage = photoWorks.length > 0 ? photoWorks[bgIndex].image : (configSitus?.heroImage || 'https://images.unsplash.com/photo-1600096194534-95cf5ece04cf');
 
   return (
-    <div className={`min-h-screen relative overflow-hidden flex flex-col items-center py-20 px-6 font-sans transition-colors duration-500 ${isDark ? 'bg-black' : 'bg-white'}`}>
+    <div className={`min-h-screen relative overflow-hidden flex flex-col items-center pt-5 sm:pt-8 pb-20 px-6 font-sans transition-colors duration-500 ${isDark ? 'bg-black' : 'bg-white'}`}>
       {/* Background Image & Glass overlay */}
-      <div
-        className={`absolute inset-0 z-0 bg-cover bg-center bg-no-repeat transition-all duration-1000 ${isDark ? 'opacity-40' : 'opacity-20'}`}
-        style={{ backgroundImage: `url(${bgImage})` }}
-      />
-      <div className={`absolute inset-0 z-0 ${isDark ? 'bg-gradient-to-b from-black/50 via-black/80 to-black' : 'bg-gradient-to-b from-white/50 via-white/80 to-white'} backdrop-blur-sm`} />
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={bgImage}
+          initial={{ opacity: 0, scale: 1.08 }}
+          animate={{ opacity: isDark ? 0.62 : 0.32, scale: 1 }}
+          exit={{ opacity: 0, scale: 1.02 }}
+          transition={{ duration: 1.1, ease: 'easeOut' }}
+          className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat"
+          style={{ backgroundImage: `url(${bgImage})` }}
+        />
+      </AnimatePresence>
+      <div className={`absolute inset-0 z-0 ${isDark ? 'bg-[radial-gradient(circle_at_50%_5%,rgba(255,255,255,0.08),transparent_32%),linear-gradient(to_bottom,rgba(0,0,0,0.18),rgba(0,0,0,0.74),#000)]' : 'bg-[radial-gradient(circle_at_50%_5%,rgba(255,255,255,0.72),transparent_34%),linear-gradient(to_bottom,rgba(255,255,255,0.28),rgba(255,255,255,0.78),#fff)]'} backdrop-blur-[2px]`} />
+      <div className="absolute inset-x-8 top-8 z-0 h-64 rounded-full bg-blue-500/10 blur-3xl" />
 
       {/* Content */}
       <div className="relative z-10 w-full max-w-md flex flex-col items-center">
@@ -73,7 +82,7 @@ const LinksContent = () => {
 
         {/* Links */}
         <div className="w-full space-y-4">
-          <button onClick={() => router.push('/')} className={`group relative w-full backdrop-blur-xl p-5 rounded-2xl flex items-center justify-between transition-all duration-300 hover:-translate-y-1 ${isDark ? 'bg-zinc-900/60 border border-white/15 hover:bg-zinc-800/80 hover:border-white/30 hover:shadow-[0_10px_20px_rgba(0,0,0,0.5)]' : 'bg-white/60 border border-black/15 hover:bg-white/80 hover:border-black/30 hover:shadow-[0_10px_20px_rgba(0,0,0,0.1)]'}`}>
+          <button onClick={() => router.push('/')} className={`group relative w-full overflow-hidden p-5 rounded-[1.75rem] flex items-center justify-between transition-all duration-300 hover:-translate-y-1 ${isDark ? 'bg-zinc-950/90 border border-white/15 shadow-[0_20px_45px_rgba(0,0,0,0.45)] hover:border-white/35' : 'bg-white/95 border border-black/10 shadow-[0_20px_45px_rgba(0,0,0,0.12)] hover:border-black/25'}`}>
             <div className="flex items-center gap-4">
               <span className={`w-12 h-12 rounded-2xl flex items-center justify-center font-bold text-lg transition-all ${isDark ? 'bg-white/10 text-white' : 'bg-black/10 text-black'}`}><ImageIcon className="w-6 h-6" /></span>
               <span className={`text-sm font-bold uppercase tracking-wider ${isDark ? 'text-white' : 'text-black'}`}>Portfolio Website</span>
@@ -81,7 +90,7 @@ const LinksContent = () => {
             <ExternalLink className={`w-5 h-5 transition-all ${isDark ? 'text-zinc-500 group-hover:text-white' : 'text-zinc-600 group-hover:text-black'} group-hover:translate-x-1`} />
           </button>
 
-          <button onClick={() => router.push('/rfx-links/orderweb')} className={`group relative w-full backdrop-blur-xl p-5 rounded-2xl flex items-center justify-between transition-all duration-300 hover:-translate-y-1 ${isDark ? 'bg-blue-600/20 border border-blue-500/30 hover:bg-blue-600/30 hover:border-blue-500/50 hover:shadow-[0_10px_30px_rgba(59,130,246,0.2)]' : 'bg-blue-100 border border-blue-300 hover:bg-blue-200 hover:border-blue-400 hover:shadow-[0_10px_30px_rgba(59,130,246,0.1)]'}`}>
+          <button onClick={() => router.push('/rfx-links/orderweb')} className={`group relative w-full overflow-hidden p-5 rounded-[1.75rem] flex items-center justify-between transition-all duration-300 hover:-translate-y-1 ${isDark ? 'bg-blue-950/90 border border-blue-400/25 shadow-[0_20px_55px_rgba(37,99,235,0.18)] hover:border-blue-300/50' : 'bg-blue-50/95 border border-blue-300 shadow-[0_20px_45px_rgba(37,99,235,0.12)] hover:border-blue-400'}`}>
             <div className="flex items-center gap-4">
               <span className={`w-12 h-12 rounded-2xl flex items-center justify-center font-bold text-lg ${isDark ? 'bg-blue-600/40 text-blue-400' : 'bg-blue-300 text-blue-700'}`}><ShoppingCart className="w-6 h-6" /></span>
               <div className="flex flex-col text-left">
@@ -92,7 +101,7 @@ const LinksContent = () => {
             <ArrowRight className={`w-5 h-5 transition-all ${isDark ? 'text-blue-500 group-hover:text-blue-400' : 'text-blue-600 group-hover:text-blue-500'} group-hover:translate-x-1`} />
           </button>
 
-          <a href="https://instagram.com/rfx.visual" target="_blank" rel="noreferrer" className={`group relative w-full backdrop-blur-xl p-5 rounded-2xl flex items-center justify-between transition-all duration-300 hover:-translate-y-1 ${isDark ? 'bg-zinc-900/60 border border-white/15 hover:bg-zinc-800/80 hover:border-white/30 hover:shadow-[0_10px_20px_rgba(0,0,0,0.5)]' : 'bg-white/60 border border-black/15 hover:bg-white/80 hover:border-black/30 hover:shadow-[0_10px_20px_rgba(0,0,0,0.1)]'}`}>
+          <a href="https://instagram.com/rfx.visual" target="_blank" rel="noreferrer" className={`group relative w-full overflow-hidden p-5 rounded-[1.75rem] flex items-center justify-between transition-all duration-300 hover:-translate-y-1 ${isDark ? 'bg-zinc-950/90 border border-white/15 shadow-[0_20px_45px_rgba(0,0,0,0.45)] hover:border-white/35' : 'bg-white/95 border border-black/10 shadow-[0_20px_45px_rgba(0,0,0,0.12)] hover:border-black/25'}`}>
             <div className="flex items-center gap-4">
               <span className={`w-12 h-12 rounded-2xl flex items-center justify-center font-bold text-lg transition-all ${isDark ? 'bg-white/10 text-white' : 'bg-black/10 text-black'}`}><Instagram className="w-6 h-6" /></span>
               <span className={`text-sm font-bold uppercase tracking-wider ${isDark ? 'text-white' : 'text-black'}`}>Instagram @rfx.visual</span>
@@ -100,7 +109,7 @@ const LinksContent = () => {
             <ExternalLink className={`w-5 h-5 transition-all ${isDark ? 'text-zinc-500 group-hover:text-white' : 'text-zinc-600 group-hover:text-black'} group-hover:translate-x-1`} />
           </a>
 
-          <a href="https://wa.me/6285731021469?text=Halo%20RFX%20VISUAL%2C%20saya%20ingin%20berkonsultasi%20mengenai%20layanan%20(Fotografi%20%2F%20Videografi%20%2F%20Animasi%20%2F%20Website).%20Bisa%20minta%20info%20lebih%20lanjut%3F" target="_blank" rel="noreferrer" className={`group relative w-full backdrop-blur-xl p-5 rounded-2xl flex items-center justify-between transition-all duration-300 hover:-translate-y-1 ${isDark ? 'bg-green-600/20 border border-green-500/30 hover:bg-green-600/30 hover:border-green-500/50 hover:shadow-[0_10px_30px_rgba(34,197,94,0.2)]' : 'bg-green-100 border border-green-300 hover:bg-green-200 hover:border-green-400 hover:shadow-[0_10px_30px_rgba(34,197,94,0.1)]'}`}>
+          <a href="https://wa.me/6285731021469?text=Halo%20RFX%20VISUAL%2C%20saya%20ingin%20berkonsultasi%20mengenai%20layanan%20(Fotografi%20%2F%20Videografi%20%2F%20Animasi%20%2F%20Website).%20Bisa%20minta%20info%20lebih%20lanjut%3F" target="_blank" rel="noreferrer" className={`group relative w-full overflow-hidden p-5 rounded-[1.75rem] flex items-center justify-between transition-all duration-300 hover:-translate-y-1 ${isDark ? 'bg-emerald-950/90 border border-emerald-400/25 shadow-[0_20px_55px_rgba(16,185,129,0.16)] hover:border-emerald-300/50' : 'bg-emerald-50/95 border border-emerald-300 shadow-[0_20px_45px_rgba(16,185,129,0.12)] hover:border-emerald-400'}`}>
             <div className="flex items-center gap-4">
               <span className={`w-12 h-12 rounded-2xl flex items-center justify-center font-bold text-lg ${isDark ? 'bg-green-600/40 text-green-400' : 'bg-green-300 text-green-700'}`}>
                 <MessageCircle className="w-6 h-6" />
@@ -110,7 +119,7 @@ const LinksContent = () => {
             <ExternalLink className={`w-5 h-5 transition-all ${isDark ? 'text-green-500 group-hover:text-green-400' : 'text-green-600 group-hover:text-green-500'} group-hover:translate-x-1`} />
           </a>
 
-          <button onClick={() => router.push('/rfx-links/pricelist')} className={`group relative w-full backdrop-blur-xl p-5 rounded-2xl flex items-center justify-between transition-all duration-300 hover:-translate-y-1 mt-6 ${isDark ? 'bg-red-600/20 border border-red-500/30 hover:bg-red-600/30 hover:border-red-500/50 hover:shadow-[0_10px_30px_rgba(220,38,38,0.2)]' : 'bg-red-100 border border-red-300 hover:bg-red-200 hover:border-red-400 hover:shadow-[0_10px_30px_rgba(220,38,38,0.1)]'}`}>
+          <button onClick={() => router.push('/rfx-links/pricelist')} className={`group relative w-full overflow-hidden p-5 rounded-[1.75rem] flex items-center justify-between transition-all duration-300 hover:-translate-y-1 mt-6 ${isDark ? 'bg-red-950/90 border border-red-400/25 shadow-[0_20px_55px_rgba(220,38,38,0.16)] hover:border-red-300/50' : 'bg-red-50/95 border border-red-300 shadow-[0_20px_45px_rgba(220,38,38,0.12)] hover:border-red-400'}`}>
             <div className="flex items-center gap-4">
               <span className={`w-12 h-12 rounded-2xl flex items-center justify-center font-bold text-lg ${isDark ? 'bg-red-600/40 text-red-400' : 'bg-red-300 text-red-700'}`}><AlertCircle className="w-6 h-6" /></span>
               <span className={`text-sm font-bold uppercase tracking-wider ${isDark ? 'text-white' : 'text-black'}`}>Pricelist</span>
