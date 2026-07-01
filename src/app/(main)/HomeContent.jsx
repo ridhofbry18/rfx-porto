@@ -1,113 +1,87 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useRef } from 'react'
 import { useRouter } from 'next/navigation'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion, useScroll, useTransform } from 'framer-motion'
 import { useData } from '@/components/DataProvider'
-import AnimatedText from '@/components/AnimatedText'
 import Layout from '@/components/Layout'
 import HireMe from '@/components/HireMe'
 import TransitionEffect from '@/components/TransitionEffect'
-import { ExternalLink, ChevronRight } from 'lucide-react'
+import { ChevronRight, ArrowRight } from 'lucide-react'
 
 const HomeContent = () => {
   const router = useRouter()
-  const { configSitus, instagramConfig, daftarKarya, daftarArtikel } = useData()
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const photos = daftarKarya?.filter(k => k.category === 'photo') || [];
+  const { configSitus, instagramConfig, daftarArtikel } = useData()
+  const heroRef = useRef(null);
+  const feedRef = useRef(null);
+  const { scrollYProgress: heroScroll } = useScroll({ target: heroRef, offset: ['start start', 'end start'] });
+  const { scrollYProgress: feedScroll } = useScroll({ target: feedRef, offset: ['start end', 'end start'] });
+  const heroRotate = useTransform(heroScroll, [0, 1], [0, -7]);
+  const heroDepth = useTransform(heroScroll, [0, 1], [1, 0.92]);
+  const heroY = useTransform(heroScroll, [0, 1], [0, 90]);
+  const leftColumnX = useTransform(feedScroll, [0, 0.45, 1], [-38, 0, 16]);
+  const centerColumnZ = useTransform(feedScroll, [0, 0.45, 1], [70, 0, -30]);
+  const rightColumnX = useTransform(feedScroll, [0, 0.45, 1], [38, 0, -16]);
+  const feedRotate = useTransform(feedScroll, [0, 0.45, 1], [10, 0, -6]);
   const igPosts = (() => {
     const raw = instagramConfig?.igFeedPosts || [];
     if (Array.isArray(raw)) return raw.concat(Array(9 - raw.length).fill('')).slice(0, 9);
     try { const parsed = JSON.parse(raw || '[]'); return Array.isArray(parsed) ? parsed.concat(Array(9 - parsed.length).fill('')).slice(0, 9) : Array(9).fill(''); } catch { return Array(9).fill(''); }
   })();
 
-  useEffect(() => {
-    if (photos.length === 0) return;
-    const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % photos.length);
-    }, 3000);
-    return () => clearInterval(interval);
-  }, [photos]);
 
   return (
     <>
       <TransitionEffect />
       <section className="flex flex-col items-center justify-start text-white w-full min-h-screen">
-        <Layout className="pt-24 sm:pt-32 lg:pt-0">
-          <div className="grid grid-cols-1 lg:grid-cols-2 items-center gap-8 lg:gap-16 w-full text-center lg:text-left mt-8 lg:mt-0">
-            {/* Text & Buttons */}
-            <div className="order-1 lg:order-2 w-full flex flex-col items-center lg:items-start p-8 sm:p-12 bg-logo-red/5 backdrop-blur-2xl border border-logo-red/20 rounded-3xl shadow-2xl relative">
-              <div className="absolute top-0 -right-2 sm:-right-3 -z-10 w-[101%] h-[102%] sm:h-[103%] rounded-[1.5rem] sm:rounded-[2rem] bg-logo-red/30 blur-sm" />
-              <AnimatedText
-                text={`${configSitus?.heroTitle1 || 'Visual'} ${configSitus?.heroTitle2 || 'Artist.'}`}
-                className="!text-5xl sm:!text-6xl md:!text-7xl lg:!text-left lg:!text-7xl xl:!text-8xl text-white uppercase font-display tracking-tight"
-                highlightIndices={[1]}
-              />
-              <p className="mt-4 mb-8 text-sm sm:text-base md:text-lg font-bold text-zinc-400 text-center lg:text-left">
-                {configSitus?.heroTagline || "Menangkap Momen, Menciptakan Mahakarya. Berbasis di Malang."}
+        <Layout className="pt-24 sm:pt-32 lg:pt-28">
+          <motion.div
+            ref={heroRef}
+            style={{ rotateX: heroRotate, scale: heroDepth, y: heroY, transformPerspective: 1200 }}
+            className="relative mx-auto flex min-h-[78vh] w-full max-w-6xl flex-col justify-center overflow-hidden rounded-[2.4rem] border-4 border-[#F6D232] bg-black px-5 py-12 text-center shadow-[0_30px_100px_rgba(246,210,50,0.16)] sm:rounded-[4rem] sm:px-10 lg:min-h-[82vh] lg:px-14"
+          >
+            <div className="pointer-events-none absolute inset-x-10 top-0 h-20 border-t border-white/20 opacity-70 [background:repeating-linear-gradient(90deg,rgba(255,255,255,.68)_0_2px,transparent_2px_18px)] sm:inset-x-20" />
+            <div className="pointer-events-none absolute left-[15%] top-16 text-sm font-mono text-zinc-500 sm:text-lg">-01</div>
+            <div className="pointer-events-none absolute left-1/2 top-16 -translate-x-1/2 text-sm font-mono text-zinc-500 sm:text-lg">00</div>
+            <div className="pointer-events-none absolute right-[15%] top-16 text-sm font-mono text-zinc-500 sm:text-lg">01</div>
+            <motion.div
+              initial={{ opacity: 0, y: 24 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, ease: 'easeOut' }}
+              className="relative z-10 mx-auto max-w-5xl"
+            >
+              <p className="mx-auto mb-12 max-w-3xl text-base uppercase tracking-[0.18em] text-white sm:text-2xl md:text-3xl">
+                {configSitus?.heroTagline || 'I create vibrant and colorful digital experiences'}
               </p>
-              <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 mt-2">
+              <div className="relative px-2 py-6 sm:px-8">
+                <span className="absolute left-0 top-0 h-8 w-8 border-l-4 border-t-4 border-white/55 sm:h-11 sm:w-11" />
+                <span className="absolute right-0 top-0 h-8 w-8 border-r-4 border-t-4 border-white/55 sm:h-11 sm:w-11" />
+                <span className="absolute bottom-0 left-0 h-8 w-8 border-b-4 border-l-4 border-white/55 sm:h-11 sm:w-11" />
+                <span className="absolute bottom-0 right-0 h-8 w-8 border-b-4 border-r-4 border-white/55 sm:h-11 sm:w-11" />
+                <p className="font-display text-4xl font-black uppercase tracking-tight text-white sm:text-6xl md:text-7xl lg:text-8xl">
+                  {configSitus?.heroTitle1 || 'RFX.Visual'}
+                </p>
+                <h1 className="mt-1 font-display text-[5.3rem] font-black uppercase leading-[0.78] tracking-[-0.08em] text-[#F6D232] sm:text-[9rem] md:text-[12rem] lg:text-[15rem] xl:text-[17rem]">
+                  {configSitus?.heroTitle2 || 'Visual Artist'}
+                </h1>
+              </div>
+              <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
                 <button
                   onClick={() => router.push('/portofolio')}
-                  className="flex items-center bg-logo-red text-white py-3 px-8 rounded-xl text-base sm:text-lg font-bold hover:bg-white hover:text-logo-red border-2 border-solid border-transparent transition-all shadow-[0_0_20px_rgba(211,34,42,0.4)]"
+                  className="group flex items-center rounded-full border border-white/35 bg-black/80 py-3 pl-7 pr-4 text-lg font-semibold uppercase tracking-wide text-white shadow-[0_0_0_7px_rgba(255,255,255,0.04)] transition hover:border-[#F6D232]"
                 >
-                  Lihat Karya <ExternalLink className="w-5 h-5 ml-2" />
+                  Lihat Karya <span className="ml-4 flex h-12 w-12 items-center justify-center rounded-full bg-[#F6D232] text-black transition group-hover:translate-x-1"><ArrowRight /></span>
                 </button>
                 <button
                   onClick={() => router.push('/kontak')}
-                  className="text-base sm:text-lg font-medium capitalize text-white underline underline-offset-8 hover:text-logo-red transition-colors"
+                  className="text-base font-bold uppercase tracking-[0.25em] text-zinc-300 transition hover:text-[#F6D232]"
                 >
                   Contact
                 </button>
               </div>
-            </div>
-
-            {/* Image / Photo Carousel */}
-            <div className="order-2 lg:order-1 w-full flex justify-center mb-8 lg:mb-0 relative">
-              {photos.length > 0 ? (
-                <div className="w-full max-w-[720px] aspect-[4/5] lg:aspect-[3/4] max-h-[70vh] rounded-[2.5rem] overflow-hidden shadow-[0_0_50px_rgba(211,34,42,0.3)] border border-white/5 relative bg-[#0a0a0a]">
-                  <AnimatePresence mode="wait">
-                    <motion.img
-                      key={`bg-${currentIndex}`}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 0.15 }}
-                      exit={{ opacity: 0 }}
-                      transition={{ duration: 1.5, ease: "easeInOut" }}
-                      src={photos[currentIndex].image}
-                      className="absolute inset-0 w-full h-full object-cover blur-2xl"
-                    />
-                  </AnimatePresence>
-                  <AnimatePresence mode="wait">
-                    <motion.div
-                      key={currentIndex}
-                      initial={{ opacity: 0, scale: 0.95 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 1.05 }}
-                      transition={{ duration: 1, ease: "easeInOut" }}
-                      className="absolute inset-0 w-full h-full z-10"
-                    >
-                      <img
-                        src={photos[currentIndex].image}
-                        alt={photos[currentIndex].title}
-                        className="w-full h-full object-cover"
-                      />
-                    </motion.div>
-                  </AnimatePresence>
-                </div>
-              ) : (
-                <motion.img
-                  src={configSitus?.heroImage || 'https://placehold.co/600x800/111/222?text=RFX+Visual'}
-                  alt="RFX Visual"
-                  className="w-full max-w-sm md:max-w-md lg:max-w-full h-auto max-h-[50vh] lg:max-h-[70vh] object-cover rounded-3xl shadow-[0_0_50px_rgba(211,34,42,0.3)] border border-white/5"
-                  initial={{ opacity: 0, x: -50 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.8, ease: "easeOut" }}
-                />
-              )}
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
         </Layout>
-
         <HireMe />
 
         {/* Article Spoiler Carousel */}
@@ -204,10 +178,12 @@ const HomeContent = () => {
                 </div>
               </div>
 
-              {/* Grid 3x3 */}
-              <div className="grid grid-cols-3 gap-1 sm:gap-2 p-1 sm:p-2 bg-black">
-                {igPosts.map((postUrl, idx) => (
-                  <div key={idx} className="relative aspect-[4/5] overflow-hidden bg-zinc-900 group cursor-pointer">
+              {/* Scroll-reactive 3D Grid: starts separated in 3 columns, then merges on scroll */}
+              <motion.div ref={feedRef} style={{ rotateX: feedRotate, transformPerspective: 1000 }} className="grid grid-cols-3 gap-1 bg-black p-1 sm:gap-2 sm:p-2">
+                {igPosts.map((postUrl, idx) => {
+                  const columnStyle = idx % 3 === 0 ? { x: leftColumnX } : idx % 3 === 1 ? { z: centerColumnZ } : { x: rightColumnX };
+                  return (
+                  <motion.div key={idx} style={columnStyle} className="group relative aspect-[4/5] cursor-pointer overflow-hidden bg-zinc-900 shadow-2xl">
                     {postUrl ? (
                       <a href={postUrl} target="_blank" rel="noreferrer" className="block w-full h-full">
                         <img src={postUrl} alt={`IG feed ${idx + 1}`} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
@@ -218,9 +194,10 @@ const HomeContent = () => {
                         Post {idx + 1}
                       </div>
                     )}
-                  </div>
-                ))}
-              </div>
+                  </motion.div>
+                  )
+                })}
+              </motion.div>
             </div>
           </Layout>
         </div>
