@@ -25,7 +25,7 @@ const LinksContent = () => {
   const bgImage = photoWorks.length > 0 ? photoWorks[bgIndex].image : (configSitus?.heroImage || 'https://images.unsplash.com/photo-1600096194534-95cf5ece04cf');
 
   return (
-    <div className={`min-h-screen relative overflow-hidden flex flex-col items-center py-20 px-6 font-sans transition-colors duration-500 ${isDark ? 'bg-black' : 'bg-white'}`}>
+    <div className={`min-h-screen relative overflow-hidden flex flex-col items-center pt-5 sm:pt-8 pb-20 px-6 font-sans transition-colors duration-500 ${isDark ? 'bg-black' : 'bg-white'}`}>
       {/* Background Image & Glass overlay */}
       <AnimatePresence mode="wait">
         <motion.div
@@ -39,7 +39,7 @@ const LinksContent = () => {
         />
       </AnimatePresence>
       <div className={`absolute inset-0 z-0 ${isDark ? 'bg-[radial-gradient(circle_at_50%_5%,rgba(255,255,255,0.08),transparent_32%),linear-gradient(to_bottom,rgba(0,0,0,0.18),rgba(0,0,0,0.74),#000)]' : 'bg-[radial-gradient(circle_at_50%_5%,rgba(255,255,255,0.72),transparent_34%),linear-gradient(to_bottom,rgba(255,255,255,0.28),rgba(255,255,255,0.78),#fff)]'} backdrop-blur-[2px]`} />
-      <div className="absolute inset-x-8 top-20 z-0 h-64 rounded-full bg-blue-500/10 blur-3xl" />
+      <div className="absolute inset-x-8 top-8 z-0 h-64 rounded-full bg-blue-500/10 blur-3xl" />
 
       {/* Content */}
       <div className="relative z-10 w-full max-w-md flex flex-col items-center">
