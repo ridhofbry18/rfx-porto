@@ -35,3 +35,10 @@ pnpm-debug.log*
 # Other
 .DS_Store
 Graduate Photography Pricelist.pdf
+
+# Root temporary media and scripts
+/*.mp3
+/*.png
+/*.py
+/*.cjs
+/*.txt
