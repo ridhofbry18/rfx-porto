@@ -17,12 +17,6 @@ export default function MainLayout({ children }) {
       <main>{children}</main>
       <Footer />
       <HireMe />
-      <Link
-        href="/admin"
-        className="fixed bottom-4 right-4 z-50 text-[10px] text-zinc-800 hover:text-zinc-500 font-mono opacity-50"
-      >
-        [admin]
-      </Link>
     </div>
   )
 }

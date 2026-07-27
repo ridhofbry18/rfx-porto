@@ -132,16 +132,16 @@ const TvDeepDive = ({ data, subcategories, onOpenVideo, onClose }) => {
       <div className="absolute inset-0 bg-black/80 backdrop-blur-md" />
 
       {/* TV Enclosure */}
-      <div className="relative z-10 w-full max-w-6xl aspect-[16/10] bg-[#1a1a1a] rounded-[2rem] border-[12px] border-[#0a0a0a] shadow-[0_30px_60px_rgba(0,0,0,0.8),inset_0_0_20px_rgba(255,255,255,0.05)] flex p-6 gap-8 pr-8">
+      <div className="relative z-10 w-full max-w-6xl md:aspect-[16/10] h-[85vh] md:h-auto bg-[#1a1a1a] rounded-[2rem] border-[8px] md:border-[12px] border-[#0a0a0a] shadow-[0_30px_60px_rgba(0,0,0,0.8),inset_0_0_20px_rgba(255,255,255,0.05)] flex flex-col md:flex-row p-4 md:p-6 gap-4 md:gap-8 md:pr-8">
         
         {/* TV Screen Container */}
-        <div className="flex-1 bg-[#050505] rounded-[2.5rem] border-[12px] border-[#0f0f0f] relative overflow-hidden shadow-[inset_0_0_50px_rgba(0,0,0,1)]">
+        <div className="flex-1 bg-[#050505] rounded-[1.5rem] md:rounded-[2.5rem] border-[8px] md:border-[12px] border-[#0f0f0f] relative overflow-hidden shadow-[inset_0_0_50px_rgba(0,0,0,1)]">
            
            {/* CRT Glass Reflection */}
-           <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-black/50 pointer-events-none z-[60] rounded-[2rem]" />
+           <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-black/50 pointer-events-none z-[60] rounded-[1.5rem] md:rounded-[2rem]" />
            
            {/* Scanlines */}
-           <div className="absolute inset-0 pointer-events-none z-[55] bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[length:100%_4px,3px_100%] opacity-40 mix-blend-overlay rounded-[2rem]" />
+           <div className="absolute inset-0 pointer-events-none z-[55] bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[length:100%_4px,3px_100%] opacity-40 mix-blend-overlay rounded-[1.5rem] md:rounded-[2rem]" />
 
            {/* TV Screen Content */}
            <div className={`w-full h-full relative ${isPowerOn ? 'opacity-100' : 'opacity-0'} transition-opacity duration-300`}>
@@ -188,37 +188,37 @@ const TvDeepDive = ({ data, subcategories, onOpenVideo, onClose }) => {
         </div>
 
         {/* TV Control Panel */}
-        <div className="w-28 shrink-0 flex flex-col items-center justify-between py-10 border-l border-[#333] pl-6">
-           <div className="flex flex-col gap-10 w-full items-center">
+        <div className="w-full md:w-28 shrink-0 flex flex-row md:flex-col items-center justify-between py-2 md:py-10 border-t md:border-t-0 md:border-l border-[#333] pt-4 md:pt-10 md:pl-6">
+           <div className="flex flex-row md:flex-col gap-4 md:gap-10 w-full items-center">
              
              {/* Speaker Grille Pattern */}
-             <div className="w-20 h-32 flex flex-wrap gap-1.5 opacity-20 justify-center">
+             <div className="hidden md:flex w-20 h-32 flex-wrap gap-1.5 opacity-20 justify-center">
                {Array.from({ length: 48 }).map((_, i) => (
                  <div key={i} className="w-2 h-2 rounded-full bg-black shadow-inner" />
                ))}
              </div>
 
              {/* Channels Buttons */}
-             <div className="flex flex-col gap-4 mt-8 w-full">
-               <button onClick={handleChUp} className="w-full h-10 bg-gradient-to-b from-[#444] to-[#222] hover:from-[#555] hover:to-[#333] rounded border-b-[6px] border-[#111] active:border-b-0 active:translate-y-1.5 transition-all flex items-center justify-center text-[10px] text-white/70 font-bold uppercase tracking-widest shadow-lg">CH +</button>
-               <button onClick={handleChDown} className="w-full h-10 bg-gradient-to-b from-[#444] to-[#222] hover:from-[#555] hover:to-[#333] rounded border-b-[6px] border-[#111] active:border-b-0 active:translate-y-1.5 transition-all flex items-center justify-center text-[10px] text-white/70 font-bold uppercase tracking-widest shadow-lg">CH -</button>
+             <div className="flex flex-row md:flex-col gap-2 md:gap-4 w-full">
+               <button onClick={handleChUp} className="w-full h-10 bg-gradient-to-b from-[#444] to-[#222] hover:from-[#555] hover:to-[#333] rounded border-b-[4px] md:border-b-[6px] border-[#111] active:border-b-0 active:translate-y-1 transition-all flex items-center justify-center text-[10px] text-white/70 font-bold uppercase tracking-widest shadow-lg">CH +</button>
+               <button onClick={handleChDown} className="w-full h-10 bg-gradient-to-b from-[#444] to-[#222] hover:from-[#555] hover:to-[#333] rounded border-b-[4px] md:border-b-[6px] border-[#111] active:border-b-0 active:translate-y-1 transition-all flex items-center justify-center text-[10px] text-white/70 font-bold uppercase tracking-widest shadow-lg">CH -</button>
              </div>
 
              {/* Volume Buttons */}
-             <div className="flex flex-col gap-4 mt-4 w-full">
-               <button onClick={handleVolUp} className="w-full h-10 bg-gradient-to-b from-[#444] to-[#222] hover:from-[#555] hover:to-[#333] rounded-full border-b-[6px] border-[#111] active:border-b-0 active:translate-y-1.5 transition-all flex items-center justify-center text-[10px] text-white/70 font-bold uppercase tracking-widest shadow-lg">VOL +</button>
-               <button onClick={handleVolDown} className="w-full h-10 bg-gradient-to-b from-[#444] to-[#222] hover:from-[#555] hover:to-[#333] rounded-full border-b-[6px] border-[#111] active:border-b-0 active:translate-y-1.5 transition-all flex items-center justify-center text-[10px] text-white/70 font-bold uppercase tracking-widest shadow-lg">VOL -</button>
+             <div className="flex flex-row md:flex-col gap-2 md:gap-4 w-full">
+               <button onClick={handleVolUp} className="w-full h-10 bg-gradient-to-b from-[#444] to-[#222] hover:from-[#555] hover:to-[#333] rounded-full border-b-[4px] md:border-b-[6px] border-[#111] active:border-b-0 active:translate-y-1 transition-all flex items-center justify-center text-[10px] text-white/70 font-bold uppercase tracking-widest shadow-lg">VOL+</button>
+               <button onClick={handleVolDown} className="w-full h-10 bg-gradient-to-b from-[#444] to-[#222] hover:from-[#555] hover:to-[#333] rounded-full border-b-[4px] md:border-b-[6px] border-[#111] active:border-b-0 active:translate-y-1 transition-all flex items-center justify-center text-[10px] text-white/70 font-bold uppercase tracking-widest shadow-lg">VOL-</button>
              </div>
 
            </div>
 
-           <div className="flex flex-col gap-8 w-full items-center mt-12">
-             <button onClick={handlePower} className={`w-16 h-16 rounded-full border-b-[6px] active:border-b-0 active:translate-y-1.5 transition-all flex items-center justify-center ${isPowerOn ? 'bg-red-500 border-red-900 shadow-[0_0_20px_rgba(239,68,68,0.6)]' : 'bg-red-800 border-red-950 shadow-lg'}`}>
-               <span className="text-xs text-white font-bold uppercase tracking-wider">PWR</span>
+           <div className="flex flex-col gap-2 md:gap-8 w-auto md:w-full items-center mt-0 md:mt-12 ml-4 md:ml-0 shrink-0">
+             <button onClick={handlePower} className={`w-12 h-12 md:w-16 md:h-16 rounded-full border-b-[4px] md:border-b-[6px] active:border-b-0 active:translate-y-1 transition-all flex items-center justify-center ${isPowerOn ? 'bg-red-500 border-red-900 shadow-[0_0_20px_rgba(239,68,68,0.6)]' : 'bg-red-800 border-red-950 shadow-lg'}`}>
+               <span className="text-[10px] md:text-xs text-white font-bold uppercase tracking-wider">PWR</span>
              </button>
 
-             <button onClick={onClose} className="text-white/40 hover:text-white transition-colors text-sm font-bold tracking-widest uppercase mt-4 underline decoration-white/20 underline-offset-4">
-               Exit Room
+             <button onClick={onClose} className="text-white/40 hover:text-white transition-colors text-[10px] md:text-sm font-bold tracking-widest uppercase mt-0 md:mt-4 underline decoration-white/20 underline-offset-4">
+               Exit
              </button>
            </div>
         </div>
