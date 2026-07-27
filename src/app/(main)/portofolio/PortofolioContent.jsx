@@ -37,12 +37,12 @@ const VideoModal = ({ isOpen, onClose, videoUrl, videoType }) => {
       >
         {isYoutube ? (
           videoId ? (
-            <iframe title="Youtube player" src={`https://www.youtube.com/embed/${videoId}?autoplay=1`} className="w-full h-full pointer-events-none" frameBorder="0" allow="autoplay" allowFullScreen />
+            <iframe title="Youtube player" src={`https://www.youtube.com/embed/${videoId}?autoplay=1`} className="w-full h-full" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen />
           ) : (
             <div className="text-white text-sm">Video Invalid</div>
           )
         ) : isVideoFile ? (
-          <video src={videoUrl} className="w-full h-full object-contain pointer-events-none" autoPlay playsInline muted />
+          <video src={videoUrl} className="w-full h-full object-contain" autoPlay playsInline controls />
         ) : (
           <iframe src={videoUrl} className="w-full h-full" frameBorder="0" allowFullScreen />
         )}

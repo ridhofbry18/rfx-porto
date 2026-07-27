@@ -400,7 +400,7 @@ const HomeContent = () => {
           {/* 3D Character */}
           <motion.div style={{ y: charY }} className="relative z-20 w-[90%] max-w-[600px] h-[65vh] md:h-[80vh] flex items-end justify-center pb-10 md:pb-0">
             <img
-              src="/hero_3d_character.png"
+              src="/hero_3d_character.webp"
               alt="Hero Character"
               className="w-full h-full object-contain drop-shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
               style={{

@@ -115,7 +115,7 @@ const Footer = () => {
       {/* 3D Floating Object */}
       <div className="absolute top-10 sm:top-20 left-1/2 -translate-x-1/2 z-10 w-[95%] sm:w-[90%] max-w-[700px] pointer-events-none drop-shadow-[0_30px_60px_rgba(0,0,0,0.8)] flex justify-center">
         <img
-          src="/hero_3d_character.png"
+          src="/hero_3d_character.webp"
           alt="3D Object"
           className="w-[80%] h-auto object-contain opacity-90 mix-blend-luminosity brightness-75 contrast-125"
           style={{
