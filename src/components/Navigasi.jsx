@@ -3,22 +3,21 @@
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Instagram, Youtube, Mail, Menu, X, Linkedin } from 'lucide-react'
-import { motion } from 'framer-motion'
+import { Instagram, Youtube, Mail, Linkedin } from 'lucide-react'
+import { motion, AnimatePresence } from 'framer-motion'
 
 const navLinks = [
-  { href: '/', key: 'beranda', title: 'Beranda' },
-  { href: '/about', key: 'about', title: 'About' },
-  { href: '/portofolio', key: 'portofolio', title: 'Karya' },
-  { href: '/artikel', key: 'artikel', title: 'Artikel' },
-  { href: '/kontak', key: 'kontak', title: 'Kontak' },
+  { href: '/portofolio', key: 'portofolio', title: 'WORK' },
+  { href: '/about', key: 'about', title: 'SERVICES' },
+  { href: '/artikel', key: 'artikel', title: 'ARTICLES' },
+  { href: '/kontak', key: 'kontak', title: 'CONTACT' },
 ]
 
 const CustomLink = ({ href, title, isActive, className = "" }) => {
   return (
-    <Link href={href} className={`${className} relative group text-white uppercase font-bold tracking-widest text-xs hover:text-logo-red transition-colors`}>
+    <Link href={href} className={`${className} relative group text-white uppercase font-display font-bold tracking-widest text-sm hover:text-white/80 transition-colors`}>
       {title}
-      <span className={`h-[2px] inline-block bg-logo-red absolute left-0 -bottom-1 group-hover:w-full transition-[width] ease duration-300 ${isActive ? 'w-full' : 'w-0'}`}>
+      <span className={`h-[2px] inline-block bg-white absolute left-0 -bottom-1 group-hover:w-full transition-[width] ease duration-300 ${isActive ? 'w-full' : 'w-0'}`}>
         &nbsp;
       </span>
     </Link>
@@ -27,9 +26,9 @@ const CustomLink = ({ href, title, isActive, className = "" }) => {
 
 const CustomMobileLink = ({ href, title, isActive, className = "", toggle }) => {
   return (
-    <Link href={href} onClick={toggle} className={`${className} relative group text-white font-bold uppercase tracking-widest text-2xl my-4 hover:text-logo-red transition-colors`}>
+    <Link href={href} onClick={toggle} className={`${className} relative group text-white font-display font-bold uppercase tracking-widest text-3xl my-4 hover:text-white/80 transition-colors`}>
       {title}
-      <span className={`h-[2px] inline-block bg-logo-red absolute left-0 -bottom-1 group-hover:w-full transition-[width] ease duration-300 ${isActive ? 'w-full' : 'w-0'}`}>
+      <span className={`h-[3px] inline-block bg-white absolute left-0 -bottom-1 group-hover:w-full transition-[width] ease duration-300 ${isActive ? 'w-full' : 'w-0'}`}>
         &nbsp;
       </span>
     </Link>
@@ -48,7 +47,6 @@ const Navigasi = ({ configSitus }) => {
   }
 
   const halamanAktif = getActiveKey()
-
   const handleClick = () => setIsOpen(!isOpen);
 
   useEffect(() => {
@@ -59,83 +57,76 @@ const Navigasi = ({ configSitus }) => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Close menu on route change
   useEffect(() => {
     setIsOpen(false)
   }, [pathname])
 
   return (
-    <div className="fixed top-0 left-0 right-0 z-50 px-4 sm:px-6 pt-4 sm:pt-6 pointer-events-none flex justify-center">
-      <header className={`relative pointer-events-auto w-full max-w-5xl px-6 py-3 lg:px-8 lg:py-4 font-medium flex items-center justify-between transition-all duration-500 rounded-full ${scrolled ? 'bg-[#0a0a0a]/80 backdrop-blur-2xl border border-white/10 shadow-[0_10px_40px_-10px_rgba(211,34,42,0.15)]' : 'bg-[#0a0a0a]/40 backdrop-blur-lg border border-white/5 shadow-xl'}`}>
+    <div className="fixed top-0 left-0 right-0 z-50 pointer-events-none flex justify-center w-full">
+      <header className={`relative pointer-events-auto w-full px-6 lg:px-12 flex items-center justify-between transition-all duration-500 ${scrolled ? 'bg-black/20 backdrop-blur-xl border-b border-white/10 shadow-lg py-4 lg:py-6' : 'bg-transparent pt-10 pb-5 lg:pt-14 lg:pb-6'}`}>
       
-        {/* Logo and Hamburger Container (Universal) */}
-        <div className="w-full flex justify-between items-center relative">
+        <div className="flex justify-between items-center w-full">
           {/* Logo */}
-          <Link href="/" className="w-24 sm:w-28 lg:w-32 hover:scale-105 transition-transform duration-300 flex items-center relative z-10">
-             <img src="/logo.png" alt="RFX Visual" className="w-full h-auto object-contain drop-shadow-[0_0_10px_rgba(211,34,42,0.5)]" />
+          <Link href="/" className="hover:scale-105 transition-transform duration-300 relative z-[100] w-24 sm:w-32 flex items-center">
+             <img src="/logo.png" alt="RFX Visual" className="w-full h-auto object-contain" />
           </Link>
 
-          {/* Desktop Socials (Hidden on Mobile) - Perfectly Centered */}
-          <nav className="hidden md:flex items-center gap-6 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
-            <motion.a href="https://instagram.com/rfx.visual" target="_blank" whileHover={{y: -3}} whileTap={{scale: 0.9}} className="w-5 text-zinc-400 hover:text-[#E1306C]">
-              <Instagram />
-            </motion.a>
-            <motion.a href="https://youtube.com/@rfxvisual" target="_blank" whileHover={{y: -3}} whileTap={{scale: 0.9}} className="w-5 text-zinc-400 hover:text-logo-red">
-              <Youtube />
-            </motion.a>
-            <motion.a href="https://www.linkedin.com/in/muhammad-ridho-febriyansyah-693b083a5" target="_blank" whileHover={{y: -3}} whileTap={{scale: 0.9}} className="w-5 text-zinc-400 hover:text-[#0A66C2]">
-              <Linkedin />
-            </motion.a>
-            <motion.a href={`mailto:${configSitus?.email || 'email@rfxvisual.my.id'}`} target="_blank" whileHover={{y: -3}} whileTap={{scale: 0.9}} className="w-5 text-zinc-400 hover:text-blue-500">
-              <Mail />
-            </motion.a>
+          {/* Desktop Navigation */}
+          <nav className="hidden md:flex items-center gap-8 relative z-[100]">
+            {navLinks.map(link => (
+              <CustomLink
+                key={link.key}
+                href={link.href}
+                title={link.title}
+                isActive={halamanAktif === link.key}
+              />
+            ))}
           </nav>
 
-          {/* Hamburger Button */}
-          <button className="flex-col justify-center items-center flex text-white bg-white/5 p-3 rounded-xl border border-white/10 backdrop-blur-md hover:bg-logo-red/20 hover:border-logo-red/50 transition-colors relative z-10" onClick={handleClick}>
-            <span className={`bg-white block transition-all duration-300 ease-out h-0.5 w-5 rounded-sm ${isOpen ? 'rotate-45 translate-y-1' : '-translate-y-1'}`}></span>
-            <span className={`bg-white block transition-all duration-300 ease-out h-0.5 w-5 rounded-sm my-0.5 ${isOpen ? 'opacity-0' : 'opacity-100'}`}></span>
-            <span className={`bg-white block transition-all duration-300 ease-out h-0.5 w-5 rounded-sm ${isOpen ? '-rotate-45 -translate-y-1' : 'translate-y-1'}`}></span>
+          {/* Hamburger Button (Mobile Only) */}
+          <button className="md:hidden flex-col justify-center items-center flex text-white relative z-[100]" onClick={handleClick}>
+            <span className={`bg-white block transition-all duration-300 ease-out h-0.5 w-6 rounded-sm ${isOpen ? 'rotate-45 translate-y-1' : '-translate-y-1.5'}`}></span>
+            <span className={`bg-white block transition-all duration-300 ease-out h-0.5 w-6 rounded-sm ${isOpen ? 'opacity-0' : 'opacity-100'}`}></span>
+            <span className={`bg-white block transition-all duration-300 ease-out h-0.5 w-6 rounded-sm ${isOpen ? '-rotate-45 -translate-y-1' : 'translate-y-1.5'}`}></span>
           </button>
         </div>
 
-        {/* Universal Menu Overlay */}
-        {isOpen && (
-          <motion.div 
-            initial={{ opacity: 0, y: -20, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -20, scale: 0.95 }}
-            transition={{ duration: 0.2 }}
-            className="absolute top-[120%] left-0 right-0 flex flex-col justify-between z-[150] items-center bg-[#0a0a0a]/90 text-white rounded-3xl backdrop-blur-3xl py-12 border border-white/10 shadow-2xl"
-          >
-            <nav className="flex items-center flex-col justify-center gap-2">
-              {navLinks.map(link => (
-                <CustomMobileLink
-                  key={link.key}
-                  href={link.href}
-                  title={link.title}
-                  isActive={halamanAktif === link.key}
-                  toggle={handleClick}
-                />
-              ))}
-            </nav>
+        {/* Mobile Menu Overlay */}
+        <AnimatePresence>
+          {isOpen && (
+            <motion.div 
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3 }}
+              className="absolute top-0 left-0 right-0 h-screen w-full flex flex-col justify-center z-[90] items-center bg-[#943838] text-white p-12"
+            >
+              <nav className="flex items-center flex-col justify-center gap-6">
+                {navLinks.map(link => (
+                  <CustomMobileLink
+                    key={link.key}
+                    href={link.href}
+                    title={link.title}
+                    isActive={halamanAktif === link.key}
+                    toggle={handleClick}
+                  />
+                ))}
+              </nav>
 
-            <nav className="flex items-center justify-center flex-wrap gap-8 mt-10 md:hidden">
-              <motion.a href="https://instagram.com/rfx.visual" target="_blank" whileHover={{y: -3}} whileTap={{scale: 0.9}} className="w-6 text-zinc-400 hover:text-[#E1306C]">
-                <Instagram className="w-full h-full" />
-              </motion.a>
-              <motion.a href="https://youtube.com/@rfxvisual" target="_blank" whileHover={{y: -3}} whileTap={{scale: 0.9}} className="w-6 text-zinc-400 hover:text-logo-red">
-                <Youtube className="w-full h-full" />
-              </motion.a>
-              <motion.a href="https://www.linkedin.com/in/muhammad-ridho-febriyansyah-693b083a5" target="_blank" whileHover={{y: -3}} whileTap={{scale: 0.9}} className="w-6 text-zinc-400 hover:text-[#0A66C2]">
-                <Linkedin className="w-full h-full" />
-              </motion.a>
-              <motion.a href={`mailto:${configSitus?.email || 'email@rfxvisual.my.id'}`} target="_blank" whileHover={{y: -3}} whileTap={{scale: 0.9}} className="w-6 text-zinc-400 hover:text-blue-500">
-                <Mail className="w-full h-full" />
-              </motion.a>
-            </nav>
-          </motion.div>
-        )}
+              <nav className="flex items-center justify-center flex-wrap gap-8 mt-16">
+                <motion.a href="https://instagram.com/rfx.visual" target="_blank" whileHover={{y: -3}} whileTap={{scale: 0.9}} className="w-8 text-white/70 hover:text-white">
+                  <Instagram className="w-full h-full" />
+                </motion.a>
+                <motion.a href="https://youtube.com/@rfxvisual" target="_blank" whileHover={{y: -3}} whileTap={{scale: 0.9}} className="w-8 text-white/70 hover:text-white">
+                  <Youtube className="w-full h-full" />
+                </motion.a>
+                <motion.a href="https://www.linkedin.com/in/muhammad-ridho-febriyansyah-693b083a5" target="_blank" whileHover={{y: -3}} whileTap={{scale: 0.9}} className="w-8 text-white/70 hover:text-white">
+                  <Linkedin className="w-full h-full" />
+                </motion.a>
+              </nav>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </header>
     </div>
   )

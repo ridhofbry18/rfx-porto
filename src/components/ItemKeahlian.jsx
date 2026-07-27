@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 
-const ItemKeahlian = ({ keahlian }) => {
+const ItemKeahlian = ({ keahlian, forceTerlihat }) => {
   const [ref, setRef] = useState(null);
   const [terlihat, setTerlihat] = useState(false);
 
@@ -17,6 +17,8 @@ const ItemKeahlian = ({ keahlian }) => {
     return () => observer.disconnect();
   }, [ref]);
 
+  const isActive = forceTerlihat !== undefined ? forceTerlihat : terlihat;
+
   return (
     <div ref={setRef} className="space-y-3 group relative z-10 w-full">
       <div className="flex justify-between items-end">
@@ -24,13 +26,13 @@ const ItemKeahlian = ({ keahlian }) => {
           {keahlian.title}
         </span>
         <span className="text-xs font-mono text-zinc-500">
-          {terlihat ? keahlian.level : 0}%
+          {isActive ? keahlian.level : 0}%
         </span>
       </div>
       <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden border border-white/5 backdrop-blur-sm">
         <div 
           className="h-full bg-gradient-to-r from-red-700 to-red-500 rounded-full transition-all duration-[2000ms] ease-out shadow-[0_0_15px_#dc2626]" 
-          style={{ width: terlihat ? `${keahlian.level}%` : '0%' }}
+          style={{ width: isActive ? `${keahlian.level}%` : '0%' }}
         />
       </div>
     </div>

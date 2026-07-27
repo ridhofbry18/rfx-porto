@@ -1,4 +1,4 @@
-import PortofolioContent from './PortofolioContent'
+import ClientWrapper from './ClientWrapper'
 
 export const metadata = {
   title: 'Portofolio RFX Visual — Video, Foto, Animasi, Website',
@@ -6,5 +6,5 @@ export const metadata = {
 }
 
 export default function Page() {
-  return <PortofolioContent />
+  return <ClientWrapper />
 }

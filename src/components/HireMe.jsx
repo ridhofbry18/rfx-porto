@@ -19,9 +19,9 @@ const CircularText = ({ className = "" }) => {
 
 const HireMe = () => {
   return (
-    <div className="fixed left-4 bottom-4 md:left-auto md:right-8 md:bottom-8 flex items-center justify-center overflow-hidden z-40">
-      <div className="w-24 md:w-36 h-auto flex items-center justify-center relative">
-        <CircularText className="fill-white animate-spin-slow opacity-80 hover:opacity-100 transition-opacity" />
+    <div className="fixed right-4 bottom-4 md:left-auto md:right-8 md:bottom-8 flex items-center justify-center overflow-hidden z-40">
+      <div className="w-20 md:w-36 h-auto flex items-center justify-center relative opacity-40 hover:opacity-100 transition-opacity duration-300">
+        <CircularText className="fill-white animate-spin-slow" />
         <a 
           href={`https://wa.me/6285731021469`} 
           target="_blank" 

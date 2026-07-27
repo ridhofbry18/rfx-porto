@@ -11,7 +11,7 @@ export default function MainLayout({ children }) {
   const { configSitus } = useData()
 
   return (
-    <div className="min-h-screen text-white font-sans tracking-tight overflow-x-hidden relative custom-scrollbar">
+    <div className="min-h-screen text-white font-sans tracking-tight overflow-x-clip relative custom-scrollbar">
       <AnimatedBackground />
       <Navigasi configSitus={configSitus} />
       <main>{children}</main>

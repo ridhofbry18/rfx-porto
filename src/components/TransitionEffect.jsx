@@ -6,21 +6,12 @@ import { motion } from 'framer-motion'
 const TransitionEffect = () => {
   return (
     <>
-      <motion.div className="fixed top-0 bottom-0 right-full w-screen h-screen z-[200] bg-logo-red/70"
-        initial={{ x: "100%", width: "100%" }}
-        animate={{ x: "0%", width: "0%" }}
-        exit={{ x: ["0%", "100%"], width: ["0%", "100%"] }}
-        transition={{ duration: 0.8, ease: "easeInOut" }}
-      />
-      <motion.div className="fixed top-0 bottom-0 right-full w-screen h-screen z-[190] bg-[#1a1a1a]"
-        initial={{ x: "100%", width: "100%" }}
-        animate={{ x: "0%", width: "0%" }}
-        transition={{ delay: 0.2, duration: 0.8, ease: "easeInOut" }}
-      />
-      <motion.div className="fixed top-0 bottom-0 right-full w-screen h-screen z-[180] bg-[#0a0a0a]"
-        initial={{ x: "100%", width: "100%" }}
-        animate={{ x: "0%", width: "0%" }}
-        transition={{ delay: 0.4, duration: 0.8, ease: "easeInOut" }}
+      <motion.div 
+        className="fixed inset-0 z-[200] bg-black/40 pointer-events-none"
+        initial={{ opacity: 1, backdropFilter: "blur(40px)" }}
+        animate={{ opacity: 0, backdropFilter: "blur(0px)" }}
+        exit={{ opacity: 1, backdropFilter: "blur(40px)" }}
+        transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }} // smooth ease out
       />
     </>
   )
