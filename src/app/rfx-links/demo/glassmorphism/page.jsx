@@ -1,13 +1,14 @@
 'use client'
 
 import React, { useState, useEffect } from 'react';
-import { Camera, Video, Film, Mail, ArrowRight, Play, Instagram, Twitter, ChevronUp, Aperture, MonitorPlay, Zap, Star, Hexagon, Crosshair } from 'lucide-react';
+import { Camera, Video, Film, Mail, ArrowRight, Play, Instagram, Twitter, ChevronUp, Aperture, MonitorPlay, Zap, Star, Hexagon, Crosshair, Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function GlassmorphismTemplate() {
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
   const [activeFilter, setActiveFilter] = useState('All');
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -31,6 +32,7 @@ export default function GlassmorphismTemplate() {
     if (el) {
       el.scrollIntoView({ behavior: 'smooth' });
     }
+    setIsMenuOpen(false);
   };
 
   const works = [
@@ -71,17 +73,17 @@ export default function GlassmorphismTemplate() {
   return (
     <div className="min-h-screen bg-[#050505] text-white font-sans selection:bg-white/20">
       
-      {/* FLOATING GLASS DOCK (NAVBAR) */}
-      <nav className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 transition-all duration-500 w-11/12 max-w-2xl">
+      {/* FLOATING GLASS DOCK (NAVBAR) - Desktop Only */}
+      <nav className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 transition-all duration-500 w-11/12 max-w-2xl hidden md:block">
         <div className="bg-white/5 backdrop-blur-3xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.5)] rounded-full px-6 py-4 flex justify-between items-center relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/5 to-white/0 translate-x-[-100%] animate-[shimmer_3s_infinite]"></div>
           
-          <div className="flex w-full justify-between sm:justify-center sm:gap-8">
+          <div className="flex w-full justify-center gap-8">
             {['home', 'about', 'services', 'gear', 'portfolio', 'contact'].map(item => (
               <button 
                 key={item} 
                 onClick={() => scrollTo(item)} 
-                className={`text-[10px] sm:text-xs uppercase tracking-[0.2em] font-medium transition-all duration-300 relative group px-2 py-1 hidden sm:block ${activeSection === item ? 'text-white' : 'text-zinc-500 hover:text-zinc-300'}`}
+                className={`text-xs uppercase tracking-[0.2em] font-medium transition-all duration-300 relative group px-2 py-1 ${activeSection === item ? 'text-white' : 'text-zinc-500 hover:text-zinc-300'}`}
               >
                 {item}
                 {activeSection === item && (
@@ -89,23 +91,41 @@ export default function GlassmorphismTemplate() {
                 )}
               </button>
             ))}
-            
-            {/* Mobile simplified nav */}
-            {['home', 'portfolio', 'contact'].map(item => (
-              <button 
-                key={`mob-${item}`} 
-                onClick={() => scrollTo(item)} 
-                className={`text-[10px] uppercase tracking-[0.2em] font-medium transition-all duration-300 relative group px-2 py-1 sm:hidden ${activeSection === item ? 'text-white' : 'text-zinc-500 hover:text-zinc-300'}`}
-              >
-                {item}
-                {activeSection === item && (
-                  <motion.span layoutId="activeTabMobile" className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-1 h-1 bg-white rounded-full shadow-[0_0_10px_rgba(255,255,255,0.8)]"></motion.span>
-                )}
-              </button>
-            ))}
           </div>
         </div>
       </nav>
+
+      {/* Mobile Top Navbar */}
+      <nav className="fixed top-0 left-0 right-0 z-50 p-4 md:hidden">
+        <div className="flex justify-between items-center bg-white/5 backdrop-blur-3xl border border-white/10 rounded-full px-6 py-4 shadow-[0_8px_32px_rgba(0,0,0,0.5)]">
+           <div className="font-bold tracking-widest uppercase text-sm text-white">Glass<span className="font-light">morphism</span></div>
+           <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="text-zinc-400 p-1">
+             {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+           </button>
+        </div>
+      </nav>
+
+      {/* Mobile Menu Dropdown */}
+      <AnimatePresence>
+        {isMenuOpen && (
+          <motion.div 
+            initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}
+            className="fixed inset-0 z-40 bg-[#050505]/95 backdrop-blur-2xl pt-28 px-6 md:hidden flex flex-col h-fit pb-10 shadow-2xl border-b border-white/10"
+          >
+            <div className="flex flex-col gap-4">
+               {['home', 'about', 'services', 'gear', 'portfolio', 'contact'].map(item => (
+                <button 
+                  key={item} 
+                  onClick={() => scrollTo(item)} 
+                  className={`text-xl font-extralight uppercase tracking-[0.2em] text-left p-4 rounded-2xl transition-all border border-transparent ${activeSection === item ? 'bg-white/10 border-white/20 text-white' : 'text-zinc-500 hover:text-white hover:bg-white/5'}`}
+                >
+                  {item}
+                </button>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* HERO SECTION */}
       <section id="home" className="relative h-screen flex flex-col items-center justify-center overflow-hidden">

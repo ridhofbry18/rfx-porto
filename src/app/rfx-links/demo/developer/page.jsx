@@ -1,13 +1,14 @@
 'use client'
 
 import React, { useState, useEffect } from 'react';
-import { Terminal, Code2, Database, Layout, Github, Linkedin, Mail, ExternalLink, ChevronRight, Command, Server, Twitter, Cpu, Layers, GitBranch, Shield, Zap, Quote, User } from 'lucide-react';
+import { Terminal, Code2, Database, Layout, Github, Linkedin, Mail, ExternalLink, ChevronRight, Command, Server, Twitter, Cpu, Layers, GitBranch, Shield, Zap, Quote, User, Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function DeveloperTemplate() {
   const [activeSection, setActiveSection] = useState('home');
   const [activeFilter, setActiveFilter] = useState('All');
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -42,6 +43,7 @@ export default function DeveloperTemplate() {
     if (el) {
       el.scrollIntoView({ behavior: 'smooth' });
     }
+    setIsMenuOpen(false);
   };
 
   const fadeUpVariant = {
@@ -126,15 +128,34 @@ export default function DeveloperTemplate() {
             <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-zinc-900 border border-zinc-800 rounded-md text-[10px] text-zinc-500 font-mono hover:bg-zinc-800 transition-colors cursor-pointer">
               <Command className="w-3 h-3" /> <span>K</span>
             </div>
-            <button className="md:hidden text-zinc-400">
-              <div className="space-y-1.5">
-                <span className="block w-5 h-0.5 bg-current"></span>
-                <span className="block w-5 h-0.5 bg-current"></span>
-              </div>
+            <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="md:hidden text-zinc-400 p-2 z-50">
+              {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
           </div>
         </div>
       </header>
+
+      {/* Mobile Menu Dropdown */}
+      <AnimatePresence>
+        {isMenuOpen && (
+          <motion.div 
+            initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}
+            className="fixed inset-0 z-40 bg-[#0a0a0a]/95 backdrop-blur-lg pt-24 px-6 md:hidden border-b border-zinc-800/50 flex flex-col h-fit pb-8 shadow-2xl"
+          >
+            <div className="flex flex-col gap-2">
+               {['home', 'about', 'stack', 'experience', 'projects', 'contact'].map(item => (
+                <button 
+                  key={item} 
+                  onClick={() => scrollTo(item)} 
+                  className={`text-2xl font-bold capitalize text-left p-4 rounded-xl transition-all ${activeSection === item ? 'bg-zinc-800 text-white' : 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-900/50'}`}
+                >
+                  {item}
+                </button>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <main className="relative z-10 max-w-6xl mx-auto">
         {/* HERO SECTION */}
