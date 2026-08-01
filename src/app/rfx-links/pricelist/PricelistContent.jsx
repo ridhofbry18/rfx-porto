@@ -1,142 +1,272 @@
 'use client'
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { ArrowRight, ChevronLeft, Check } from 'lucide-react';
+import { ArrowRight, ChevronLeft, Check, Diamond, PlusCircle, Image as ImageIcon, Video, Code, Palette, Play } from 'lucide-react';
 import { useData } from '@/components/DataProvider';
+import { motion, AnimatePresence } from 'framer-motion';
+
+const fadeUpVariant = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
+  exit: { opacity: 0, y: -20, transition: { duration: 0.3 } }
+};
+
+const staggerContainer = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
+};
 
 const PricelistContent = () => {
-  const { daftarPricelist = [], daftarKarya = [] } = useData();
+  const { daftarPricelist = [], daftarKarya = [], isDark } = useData();
   const router = useRouter();
   const [selectedCategory, setSelectedCategory] = useState(null);
   
   const photoWorks = daftarKarya.filter(item => item.category === 'photo');
-  const itemsPerSlide = 5;
-  const numSlides = Math.ceil(photoWorks.length / itemsPerSlide);
-  const [slideIndex, setSlideIndex] = useState(0);
 
-  useEffect(() => {
-    if (numSlides <= 1) return;
-    const interval = setInterval(() => {
-      setSlideIndex(prev => (prev + 1) % numSlides);
-    }, 120000); // 2 menit
-    return () => clearInterval(interval);
-  }, [numSlides]);
-
-  const currentPhotos = photoWorks.slice(slideIndex * itemsPerSlide, (slideIndex + 1) * itemsPerSlide);
-
-  if (selectedCategory) {
-    const list = selectedCategory;
-    return (
-      <div className="min-h-screen bg-[#050505] text-white font-sans relative overflow-x-hidden">
-        <div className="max-w-2xl mx-auto px-6 py-16">
-          <div className="text-center mb-12">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.4em] text-red-500 mb-4">{list.title}</p>
-            <h2 className="text-4xl md:text-5xl font-black tracking-[-0.04em] uppercase mb-2">Pricelist<span className="text-red-500">.</span></h2>
-            {list.subtitle && <p className="text-zinc-500 text-sm font-light">{list.subtitle}</p>}
-          </div>
-
-          <div className="space-y-4 mb-16">
-            {list.packages?.map((pkg, idx) => (
-              <div key={idx} className={`bg-zinc-900/40 border ${pkg.isBestValue ? 'border-red-500/20 bg-gradient-to-br from-zinc-900/80 to-zinc-900/30' : 'border-white/5'} rounded-2xl p-6 hover:border-red-500/30 transition-all relative overflow-hidden`}>
-                {pkg.isBestValue && <div className="absolute top-0 right-0 px-3 py-1 bg-red-600 text-white text-[9px] font-black tracking-widest uppercase rounded-bl-xl z-20">Best Value</div>}
-                {pkg.isBestValue && <div className="absolute top-0 right-0 w-20 h-20 bg-red-500/10 rounded-bl-full blur-2xl"></div>}
-
-                <div className="flex justify-between items-start mb-4 relative z-10">
-                  <h3 className="text-xl font-bold uppercase tracking-wider">{pkg.name}</h3>
-                  <span className="text-lg font-black text-red-500">{pkg.price}</span>
-                </div>
-
-                <ul className="space-y-2 text-sm text-zinc-400 font-light relative z-10">
-                  {pkg.features?.map((feat, i) => (
-                    <li key={i} className="flex gap-2 items-start">
-                      <Check className="w-4 h-4 text-red-500 shrink-0 mt-0.5" />
-                      <span dangerouslySetInnerHTML={{ __html: feat }} />
-                    </li>
-                  ))}
-                </ul>
-                {pkg.note && <p className="mt-4 text-xs text-zinc-500 p-3 bg-black/50 rounded-xl relative z-10" dangerouslySetInnerHTML={{ __html: pkg.note }}></p>}
-              </div>
-            ))}
-          </div>
-
-          {list.extra_info?.length > 0 && (
-            <div className="mb-12 space-y-3 bg-zinc-900/20 border border-white/5 p-6 rounded-2xl text-xs text-zinc-400 font-light leading-relaxed">
-              <h4 className="font-bold text-white uppercase tracking-wider mb-2 text-sm">Tambahan / Extra</h4>
-              {list.extra_info.map((info, idx) => <p key={idx} dangerouslySetInnerHTML={{ __html: info }}></p>)}
-            </div>
-          )}
-
-          {list.terms?.length > 0 && (
-            <div className="mb-12">
-              <h4 className="font-bold text-white uppercase tracking-wider mb-4 text-sm border-b border-white/10 pb-2">Syarat & Ketentuan</h4>
-              <ol className="list-decimal pl-4 space-y-3 text-xs text-zinc-400 font-light leading-relaxed uppercase">
-                {list.terms.map((term, idx) => <li key={idx} dangerouslySetInnerHTML={{ __html: term }}></li>)}
-              </ol>
-            </div>
-          )}
-
-          <div className="flex flex-col items-center gap-4 border-t border-white/10 pt-8 pb-10">
-            <button onClick={() => router.push(`/rfx-links/pricelist/formbooking?kategori=${encodeURIComponent(list.title)}`)} className="w-full text-center px-6 py-4 rounded-xl bg-red-600 hover:bg-red-500 text-white font-black text-xs uppercase tracking-widest transition-all shadow-[0_0_20px_rgba(220,38,38,0.3)]">
-              Booking Sekarang (WA)
-            </button>
-            <button onClick={() => setSelectedCategory(null)} className="text-[10px] text-zinc-500 hover:text-white uppercase tracking-widest font-bold flex items-center gap-2">
-              <ChevronLeft className="w-3 h-3" /> Kembali ke Kategori
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  const getIconForCategory = (title) => {
+    const t = title.toLowerCase();
+    if (t.includes('foto')) return <ImageIcon className="w-6 h-6" />;
+    if (t.includes('video')) return <Video className="w-6 h-6" />;
+    if (t.includes('web')) return <Code className="w-6 h-6" />;
+    if (t.includes('animasi')) return <Play className="w-6 h-6" />;
+    return <Palette className="w-6 h-6" />;
+  };
 
   return (
-    <div className="min-h-screen bg-[#050505] flex flex-col items-center pt-24 pb-10 text-white px-6">
-      <div className="w-full max-w-md text-center mb-10">
-        <h2 className="text-3xl font-black uppercase mb-2 tracking-tighter">Pilih Kategori<span className="text-red-600">.</span></h2>
-        <p className="text-zinc-500 text-xs font-light">Pilih kategori pricelist yang ingin Anda lihat detailnya.</p>
+    <div className={`min-h-screen font-sans transition-colors duration-700 selection:bg-red-500/30 overflow-x-hidden ${isDark ? 'bg-[#0a0a0a] text-zinc-300' : 'bg-[#fafafa] text-zinc-800'}`}>
+      
+      {/* Dynamic Background Pattern */}
+      <div className="fixed inset-0 z-0 pointer-events-none opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, currentColor 1px, transparent 0)', backgroundSize: '32px 32px' }}></div>
+      <div className={`fixed inset-0 z-0 pointer-events-none opacity-20 ${isDark ? 'bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-red-900/20 via-[#0a0a0a] to-[#0a0a0a]' : 'bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-red-100 via-[#fafafa] to-[#fafafa]'}`}></div>
+
+      <div className="relative z-10 max-w-5xl mx-auto px-6 py-24 md:py-32 min-h-[80vh]">
+        <AnimatePresence mode="wait">
+          {!selectedCategory ? (
+            <motion.div 
+              key="selection"
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+              variants={staggerContainer}
+              className="w-full flex flex-col items-center"
+            >
+              <motion.div variants={fadeUpVariant} className="text-center mb-16 max-w-2xl">
+                <div className="inline-flex items-center justify-center w-12 h-12 rounded-full mb-6 shadow-xl border border-red-500/20 bg-red-500/10 text-red-500">
+                  <Diamond className="w-5 h-5" />
+                </div>
+                <h1 className={`text-4xl md:text-6xl font-black tracking-tighter mb-4 ${isDark ? 'text-white' : 'text-zinc-900'}`}>
+                  Layanan <span className="text-red-600">Premium</span>
+                </h1>
+                <p className={`text-base md:text-lg leading-relaxed ${isDark ? 'text-zinc-400' : 'text-zinc-600'}`}>
+                  Pilih kategori layanan di bawah untuk melihat rincian harga dan spesifikasi paket yang kami tawarkan.
+                </p>
+              </motion.div>
+
+              <motion.div variants={staggerContainer} className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 w-full max-w-4xl">
+                {daftarPricelist.length === 0 ? (
+                  <div className={`col-span-2 p-12 rounded-3xl text-center border ${isDark ? 'border-zinc-800 bg-zinc-900/50' : 'border-zinc-200 bg-white'}`}>Belum ada kategori pricelist.</div>
+                ) : (
+                  daftarPricelist.map((list) => (
+                    <motion.div variants={fadeUpVariant} key={list.id}>
+                      <button 
+                        onClick={() => setSelectedCategory(list)} 
+                        className={`w-full h-full group text-left relative overflow-hidden rounded-3xl p-8 border transition-all duration-500 hover:-translate-y-1 ${
+                          isDark 
+                          ? 'bg-zinc-900/40 hover:bg-zinc-800/80 border-zinc-800 hover:border-red-500/50 shadow-[0_0_0_rgba(0,0,0,0)] hover:shadow-[0_20px_40px_-15px_rgba(220,38,38,0.2)]' 
+                          : 'bg-white hover:bg-red-50/50 border-zinc-200 hover:border-red-200 shadow-sm hover:shadow-[0_20px_40px_-15px_rgba(220,38,38,0.1)]'
+                        }`}
+                      >
+                        {/* Hover Gradient */}
+                        <div className="absolute inset-0 bg-gradient-to-br from-red-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                        
+                        <div className="relative z-10 flex flex-col h-full justify-between gap-8">
+                          <div className="flex flex-col gap-8">
+                            <div className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-colors duration-500 ${isDark ? 'bg-zinc-950 text-zinc-400 group-hover:text-red-500 group-hover:bg-red-950/50' : 'bg-zinc-50 text-zinc-400 group-hover:text-red-600 group-hover:bg-red-100/50'}`}>
+                              {getIconForCategory(list.title)}
+                            </div>
+                            <div className="pr-4">
+                              <h3 className={`text-2xl font-bold tracking-tight mb-2 transition-colors ${isDark ? 'text-white' : 'text-zinc-900'}`}>{list.title}</h3>
+                              <p className="text-sm font-medium tracking-wide uppercase text-zinc-500 group-hover:text-red-500/70 transition-colors">{list.subtitle || 'Lihat Detail Paket'}</p>
+                            </div>
+                          </div>
+                          
+                          <div className="flex justify-end w-full mt-auto">
+                            <div className="w-10 h-10 shrink-0 rounded-full border border-zinc-700/50 flex items-center justify-center text-zinc-500 group-hover:text-red-500 group-hover:border-red-500/50 group-hover:translate-x-2 transition-all duration-500">
+                              <ArrowRight className="w-4 h-4" />
+                            </div>
+                          </div>
+                        </div>
+                      </button>
+                    </motion.div>
+                  ))
+                )}
+              </motion.div>
+
+              <motion.div variants={fadeUpVariant} className="mt-12 w-full flex justify-center">
+                <button 
+                  onClick={() => router.push('/')} 
+                  className={`group flex items-center gap-2 px-6 py-3 rounded-full text-xs font-bold tracking-widest uppercase transition-all ${isDark ? 'text-zinc-500 hover:text-white hover:bg-zinc-900' : 'text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100'}`}
+                >
+                  <ChevronLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> Kembali ke Beranda
+                </button>
+              </motion.div>
+            </motion.div>
+          ) : (
+            <motion.div 
+              key="detail"
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+              variants={staggerContainer}
+              className="w-full flex flex-col items-center max-w-4xl mx-auto"
+            >
+              <motion.div variants={fadeUpVariant} className="w-full flex items-center justify-between mb-12">
+                <button 
+                  onClick={() => setSelectedCategory(null)} 
+                  className={`group flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold tracking-widest uppercase transition-all ${isDark ? 'bg-zinc-900 text-zinc-400 hover:text-white hover:bg-zinc-800' : 'bg-white text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100 shadow-sm'}`}
+                >
+                  <ChevronLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> Back
+                </button>
+                <div className={`px-4 py-2 rounded-full text-[10px] font-bold tracking-widest uppercase border ${isDark ? 'border-zinc-800 text-zinc-500' : 'border-zinc-200 text-zinc-400'}`}>
+                  {selectedCategory.title}
+                </div>
+              </motion.div>
+
+              <motion.div variants={fadeUpVariant} className="text-center mb-16">
+                <h2 className={`text-4xl md:text-6xl font-black tracking-tighter mb-4 uppercase ${isDark ? 'text-white' : 'text-zinc-900'}`}>
+                  Pricing <span className="text-red-600">Plans.</span>
+                </h2>
+                {selectedCategory.subtitle && <p className={`text-base md:text-lg max-w-2xl mx-auto ${isDark ? 'text-zinc-400' : 'text-zinc-500'}`}>{selectedCategory.subtitle}</p>}
+              </motion.div>
+
+              <motion.div variants={staggerContainer} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full mb-16 items-start">
+                {selectedCategory.packages?.map((pkg, idx) => (
+                  <motion.div variants={fadeUpVariant} key={idx} className={`relative flex flex-col h-full p-8 rounded-3xl border transition-all duration-300 ${
+                    pkg.isBestValue 
+                      ? (isDark ? 'bg-gradient-to-b from-zinc-900 to-zinc-950 border-red-500/50 shadow-[0_0_30px_rgba(220,38,38,0.15)] md:-mt-4 md:mb-4 relative z-10' : 'bg-white border-red-500/50 shadow-[0_20px_40px_-15px_rgba(220,38,38,0.2)] md:-mt-4 md:mb-4 relative z-10') 
+                      : (isDark ? 'bg-zinc-950/50 border-zinc-800 hover:border-zinc-600' : 'bg-white border-zinc-200 hover:border-zinc-300 shadow-sm')
+                  }`}>
+                    
+                    {pkg.isBestValue && (
+                      <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-red-600 text-white text-[10px] font-black uppercase tracking-widest px-4 py-1.5 rounded-full shadow-lg whitespace-nowrap">
+                        Recommended
+                      </div>
+                    )}
+
+                    <div className="mb-8">
+                      <h3 className={`text-xl font-bold uppercase tracking-wide mb-2 ${isDark ? 'text-white' : 'text-zinc-900'}`}>{pkg.name}</h3>
+                      <div className="flex items-baseline gap-1">
+                        <span className={`text-3xl font-black tracking-tighter ${pkg.isBestValue ? 'text-red-500' : (isDark ? 'text-white' : 'text-zinc-900')}`}>{pkg.price}</span>
+                      </div>
+                    </div>
+
+                    <ul className="space-y-4 mb-8 flex-1">
+                      {pkg.features?.map((feat, i) => (
+                        <li key={i} className="flex gap-3 items-start">
+                          <div className={`mt-0.5 rounded-full p-0.5 shrink-0 ${pkg.isBestValue ? 'bg-red-500/20 text-red-500' : (isDark ? 'bg-zinc-800 text-zinc-400' : 'bg-zinc-100 text-zinc-400')}`}>
+                            <Check className="w-3 h-3" />
+                          </div>
+                          <span className={`text-sm leading-relaxed ${isDark ? 'text-zinc-300' : 'text-zinc-600'}`} dangerouslySetInnerHTML={{ __html: feat }} />
+                        </li>
+                      ))}
+                    </ul>
+
+                    {pkg.note && (
+                      <div className={`text-xs p-4 rounded-2xl mb-8 ${isDark ? 'bg-zinc-900/50 text-zinc-400 border border-zinc-800/50' : 'bg-zinc-50 text-zinc-500 border border-zinc-100'}`} dangerouslySetInnerHTML={{ __html: pkg.note }} />
+                    )}
+
+                    <button 
+                      onClick={() => router.push(`/pricelist/formbooking?kategori=${encodeURIComponent(selectedCategory.title)}`)} 
+                      className={`w-full py-4 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${
+                        pkg.isBestValue
+                        ? 'bg-red-600 hover:bg-red-500 text-white shadow-[0_0_20px_rgba(220,38,38,0.3)] hover:shadow-[0_0_30px_rgba(220,38,38,0.5)]'
+                        : (isDark ? 'bg-zinc-900 hover:bg-white hover:text-black text-white' : 'bg-zinc-100 hover:bg-zinc-900 hover:text-white text-zinc-900')
+                      }`}
+                    >
+                      Pilih Paket
+                    </button>
+                  </motion.div>
+                ))}
+              </motion.div>
+
+              {(selectedCategory.extra_info?.length > 0 || selectedCategory.terms?.length > 0) && (
+                <motion.div variants={fadeUpVariant} className="w-full grid grid-cols-1 md:grid-cols-2 gap-6 mb-16">
+                  {selectedCategory.extra_info?.length > 0 && (
+                    <div className={`p-8 rounded-3xl border h-full ${isDark ? 'bg-zinc-900/30 border-zinc-800' : 'bg-white border-zinc-200 shadow-sm'}`}>
+                      <h4 className={`text-lg font-bold uppercase tracking-wider mb-6 flex items-center gap-2 ${isDark ? 'text-white' : 'text-zinc-900'}`}>
+                        <PlusCircle className="w-4 h-4 text-red-500" /> Ekstra
+                      </h4>
+                      <div className="space-y-4">
+                        {selectedCategory.extra_info.map((info, idx) => (
+                          <p key={idx} className={`text-sm leading-relaxed ${isDark ? 'text-zinc-400' : 'text-zinc-600'}`} dangerouslySetInnerHTML={{ __html: info }}></p>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {selectedCategory.terms?.length > 0 && (
+                    <div className={`p-8 rounded-3xl border h-full ${isDark ? 'bg-zinc-900/30 border-zinc-800' : 'bg-white border-zinc-200 shadow-sm'}`}>
+                      <h4 className={`text-lg font-bold uppercase tracking-wider mb-6 flex items-center gap-2 ${isDark ? 'text-white' : 'text-zinc-900'}`}>
+                        Syarat & Ketentuan
+                      </h4>
+                      <ol className="list-decimal pl-5 space-y-3">
+                        {selectedCategory.terms.map((term, idx) => (
+                          <li key={idx} className={`text-sm leading-relaxed pl-1 ${isDark ? 'text-zinc-400' : 'text-zinc-600'}`} dangerouslySetInnerHTML={{ __html: term }}></li>
+                        ))}
+                      </ol>
+                    </div>
+                  )}
+                </motion.div>
+              )}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
-      <div className="w-full max-w-md space-y-4">
-        {daftarPricelist.length === 0 ? (
-          <div className="p-8 border border-white/5 rounded-2xl text-center text-zinc-500 text-xs">Belum ada kategori pricelist.</div>
-        ) : (
-          daftarPricelist.map(list => (
-            <button key={list.id} onClick={() => setSelectedCategory(list)} className="w-full group relative bg-zinc-900/40 hover:bg-zinc-800/60 border border-white/10 backdrop-blur-xl p-6 rounded-2xl flex items-center justify-between transition-all duration-300 hover:-translate-y-1 hover:border-white/30 hover:shadow-[0_10px_20px_rgba(0,0,0,0.5)]">
-              <div className="flex flex-col items-start text-left">
-                <span className="text-lg font-bold text-white uppercase tracking-wider mb-1">{list.title}</span>
-                <span className="text-[10px] text-zinc-500 uppercase tracking-widest">{list.subtitle || 'Lihat Paket'}</span>
-              </div>
-              <ArrowRight className="w-5 h-5 text-zinc-500 group-hover:text-red-500 group-hover:translate-x-1 transition-all" />
-            </button>
-          ))
-        )}
-      </div>
-
+      {/* Marquee Cuplikan Karya (Always visible if exists) */}
       {photoWorks.length > 0 && (
-        <div className="w-full max-w-2xl mt-16 pt-10 border-t border-white/10">
-          <div className="text-center mb-6">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.4em] text-red-500 mb-2">Cuplikan Karya</p>
-            <h3 className="text-xl font-black uppercase">Fotografi <span className="text-red-500">Kami</span></h3>
+        <div className={`w-full py-16 border-t relative overflow-hidden flex flex-col justify-center ${isDark ? 'bg-[#050505] border-zinc-900' : 'bg-zinc-50 border-zinc-200'}`}>
+          <div className="text-center mb-10 relative z-10">
+            <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-red-500 mb-2">Showcase</p>
+            <h3 className={`text-2xl md:text-3xl font-black uppercase tracking-tight ${isDark ? 'text-white' : 'text-zinc-900'}`}>Portofolio <span className="text-red-500">Karya</span></h3>
           </div>
           
-          <div className="flex flex-wrap justify-center gap-3 transition-opacity duration-1000 ease-in-out" key={slideIndex}>
-            {currentPhotos.map(item => (
-              <div key={item.id} className="w-24 h-24 md:w-32 md:h-32 rounded-2xl overflow-hidden border border-zinc-800/60 group relative shadow-xl">
-                <img src={item.image} alt={item.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
-                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                  <span className="text-[8px] text-white font-bold uppercase tracking-widest text-center px-1">{item.title}</span>
-                </div>
-              </div>
-            ))}
+          <div className="w-full overflow-hidden flex items-center group relative">
+             <div className={`absolute left-0 top-0 bottom-0 w-32 z-20 pointer-events-none ${isDark ? 'bg-gradient-to-r from-[#050505] to-transparent' : 'bg-gradient-to-r from-zinc-50 to-transparent'}`}></div>
+             <div className={`absolute right-0 top-0 bottom-0 w-32 z-20 pointer-events-none ${isDark ? 'bg-gradient-to-l from-[#050505] to-transparent' : 'bg-gradient-to-l from-zinc-50 to-transparent'}`}></div>
+             
+             <style dangerouslySetInnerHTML={{__html: `
+               @keyframes scrollworks {
+                 0% { transform: translateX(0); }
+                 100% { transform: translateX(calc(-200px * ${photoWorks.length} - 1.5rem * ${photoWorks.length})); }
+               }
+               .animate-scrollworks {
+                 display: flex;
+                 animation: scrollworks 80s linear infinite;
+               }
+               .group:hover .animate-scrollworks {
+                 animation-play-state: paused;
+               }
+             `}} />
+             
+             <div className="animate-scrollworks gap-6 px-3">
+               {[...Array(3)].map((_, i) => (
+                 <React.Fragment key={i}>
+                   {photoWorks.map(item => (
+                     <div key={`${i}-${item.id}`} className={`w-[200px] h-[200px] shrink-0 rounded-2xl overflow-hidden border relative group/item shadow-xl ${isDark ? 'border-zinc-800' : 'border-zinc-200'}`}>
+                       <img src={item.image} alt={item.title} className="w-full h-full object-cover group-hover/item:scale-110 transition-transform duration-700" />
+                       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover/item:opacity-100 transition-opacity duration-300 flex items-end p-4">
+                         <span className="text-xs text-white font-bold uppercase tracking-wider">{item.title}</span>
+                       </div>
+                     </div>
+                   ))}
+                 </React.Fragment>
+               ))}
+             </div>
           </div>
         </div>
       )}
-
-      <div className="mt-12">
-        <button onClick={() => router.push('/rfx-links')} className="text-[10px] text-zinc-500 hover:text-white uppercase tracking-widest font-bold flex items-center gap-2">
-          <ChevronLeft className="w-3 h-3" /> Kembali ke Bio
-        </button>
-      </div>
     </div>
   );
 };

@@ -77,7 +77,7 @@ Mohon konfirmasi ketersediaan jadwal dan total biaya. Terima kasih!`;
   return (
     <div className="min-h-screen bg-[#050505] text-white font-sans py-16 px-6 relative overflow-x-hidden">
       <div className="max-w-xl mx-auto">
-        <button onClick={() => router.push('/rfx-links/pricelist')} className="text-[10px] text-zinc-500 hover:text-white uppercase tracking-widest font-bold flex items-center gap-2 mb-10 transition-colors">
+        <button onClick={() => router.push('/pricelist')} className="text-[10px] text-zinc-500 hover:text-white uppercase tracking-widest font-bold flex items-center gap-2 mb-10 transition-colors">
           <ChevronLeft className="w-3 h-3" /> Kembali ke Pricelist
         </button>
 

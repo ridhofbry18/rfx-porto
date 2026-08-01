@@ -11,15 +11,6 @@ const nextConfig = {
       { protocol: 'https', hostname: 'cdn-icons-png.flaticon.com' },
     ],
   },
-  async redirects() {
-    return [
-      {
-        source: '/orderweb',
-        destination: '/rfx-links/orderweb',
-        permanent: true,
-      },
-    ]
-  },
 }
 
 export default nextConfig
