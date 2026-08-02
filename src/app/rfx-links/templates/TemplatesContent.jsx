@@ -26,77 +26,21 @@ const TemplatesContent = () => {
   const totalHarga = cart.reduce((total, item) => total + (item.priceInt * item.qty), 0);
   const formatRupiah = (angka) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(angka);
 
-  const [isCheckingOut, setIsCheckingOut] = useState(false);
-  const [qrisData, setQrisData] = useState(null);
+  const [paymentCodeData, setPaymentCodeData] = useState(null);
 
-  // Efek Polling Otomatis untuk mengecek status lunas
-  useEffect(() => {
-    if (!qrisData) return;
-
-    const intervalId = setInterval(async () => {
-      try {
-        const response = await fetch('/api/pakasir/status', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ orderId: qrisData.orderId, amount: qrisData.amount })
-        });
-        const data = await response.json();
-        
-        if (data.status === 'completed') {
-          clearInterval(intervalId);
-          setQrisData(null);
-          setCart([]);
-          setIsCartOpen(false);
-          router.push(`/download/${qrisData.orderId}`);
-        }
-      } catch (err) {
-        console.error("Polling error:", err);
-      }
-    }, 3000);
-
-    return () => clearInterval(intervalId);
-  }, [qrisData, router]);
-
-  const tanganiCheckoutPakasir = async () => {
+  const tanganiCheckoutPakasir = () => {
     if (cart.length === 0) return;
     
-    setIsCheckingOut(true);
+    // Generate stateless payment code based on cart items
+    const itemIds = cart.map(item => item.id).join(',');
+    // Encode to base64 to make it look like a secure payment code
+    const encoded = btoa(itemIds).replace(/=/g, ''); 
+    const payCode = `RFX-${encoded}-${totalHarga}`;
     
-    try {
-      const response = await fetch('/api/pakasir/checkout', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          cart,
-          totalHarga
-        })
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Terjadi kesalahan saat memproses checkout.');
-      }
-
-      if (data.qris_url || data.qris_string) {
-        // Tampilkan Modal QRIS In-App
-        setQrisData({
-          url: data.qris_url,
-          string: data.qris_string,
-          orderId: data.order_id || 'UNKNOWN',
-          amount: totalHarga
-        });
-      } else {
-        alert("Gagal mendapatkan kode QRIS dari server.");
-      }
-    } catch (error) {
-      console.error(error);
-      alert(error.message);
-    } finally {
-      setIsCheckingOut(false);
-    }
+    setPaymentCodeData({
+      code: payCode,
+      url: `https://rfxvisual.com/rfx-links/pay?code=${payCode}`
+    });
   };
 
   return (
@@ -228,55 +172,59 @@ const TemplatesContent = () => {
                 </div>
                 <button 
                   onClick={tanganiCheckoutPakasir} 
-                  disabled={isCheckingOut}
-                  className={`w-full py-4 rounded-xl font-black uppercase tracking-widest text-[10px] transition-all flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(37,99,235,0.2)] ${isCheckingOut ? 'bg-blue-800 text-blue-300 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-500 text-white'}`}
+                  className={`w-full py-4 rounded-xl font-black uppercase tracking-widest text-[10px] transition-all flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(37,99,235,0.2)] bg-blue-600 hover:bg-blue-500 text-white`}
                 >
-                  {isCheckingOut ? (
-                    <>Memproses Pembayaran... <span className="animate-spin w-4 h-4 border-2 border-current border-t-transparent rounded-full ml-2"></span></>
-                  ) : (
-                    <>Checkout via Pakasir <ArrowRight className="w-4 h-4" /></>
-                  )}
+                  Dapatkan Kode Pembayaran <ArrowRight className="w-4 h-4" />
                 </button>
-                <p className="text-[9px] text-center text-zinc-500 italic mt-4">*Kode QRIS akan langsung muncul di layar Anda. Kode API dinamis sedang aktif.</p>
+                <p className="text-[9px] text-center text-zinc-500 italic mt-4">*Sistem akan memberikan Kode khusus agar sesi pembayaran Anda aman & tidak hilang.</p>
               </div>
             )}
           </div>
         </>
       )}
       
-      {/* Modal QRIS In-App */}
-      {qrisData && (
+      {/* Modal Peringatan In-App Browser (Kode Pembayaran) */}
+      {paymentCodeData && (
         <div className="fixed inset-0 z-[200] bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
           <div className="bg-white rounded-3xl p-8 max-w-sm w-full flex flex-col items-center text-center animate-slide-in-right shadow-[0_0_50px_rgba(37,99,235,0.2)] relative">
-            <button onClick={() => setQrisData(null)} className="absolute top-4 right-4 w-8 h-8 rounded-full bg-zinc-100 flex items-center justify-center text-zinc-500 hover:text-red-500 transition-colors">
+            <button onClick={() => setPaymentCodeData(null)} className="absolute top-4 right-4 w-8 h-8 rounded-full bg-zinc-100 flex items-center justify-center text-zinc-500 hover:text-red-500 transition-colors">
               <X className="w-4 h-4" />
             </button>
             
-            <h3 className="text-xl font-black uppercase text-black mb-1">Scan QRIS</h3>
-            <p className="text-xs text-zinc-500 mb-6 font-medium">Order ID: {qrisData.orderId}</p>
-            
-            <div className="w-56 h-56 bg-white rounded-2xl mb-6 p-3 flex items-center justify-center overflow-hidden border-2 border-dashed border-blue-200 shadow-inner">
-              {/* Render QRIS dari URL atau String */}
-              {qrisData.url ? (
-                <img src={qrisData.url} alt="QRIS Barcode" className="w-full h-full object-contain" />
-              ) : qrisData.string ? (
-                <QRCodeSVG value={qrisData.string} size={200} level="H" includeMargin={true} />
-              ) : (
-                <p className="text-xs text-zinc-400">QR Error</p>
-              )}
+            <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-6">
+              <ShoppingCart className="w-8 h-8 text-blue-600" />
             </div>
             
-            <p className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold mb-1">Total Tagihan</p>
-            <p className="text-3xl font-black text-blue-600 mb-8">{formatRupiah(qrisData.amount)}</p>
+            <h3 className="text-xl font-black uppercase text-black mb-2">Simpan Kode Pesanan</h3>
+            <p className="text-xs text-zinc-500 mb-6 font-medium leading-relaxed">
+              Untuk menghindari resiko tertutupnya halaman saat Anda membuka aplikasi m-Banking, <b>tolong salin link di bawah ini dan buka di browser utama Anda (Safari / Chrome).</b>
+            </p>
             
-            <div className="w-full bg-zinc-900 text-white py-4 rounded-xl font-bold uppercase tracking-widest text-[10px] flex flex-col items-center justify-center gap-2 relative overflow-hidden">
-              <div className="absolute inset-0 bg-blue-500/20 animate-pulse"></div>
-              <span className="relative flex items-center gap-2">
-                <span className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
-                Menunggu Pembayaran...
-              </span>
+            <div className="w-full bg-zinc-50 rounded-xl mb-6 p-4 border-2 border-dashed border-zinc-200 text-left relative group">
+               <p className="text-[9px] uppercase tracking-widest text-zinc-400 font-bold mb-1">Kode Pembayaran:</p>
+               <p className="font-mono text-sm font-bold text-black break-all">{paymentCodeData.code}</p>
             </div>
-            <p className="text-[9px] text-zinc-400 italic mt-4 text-center">*Mohon selesaikan pembayaran di aplikasi Bank/E-Wallet Anda.<br/>Layar ini akan otomatis mengarahkan Anda ke file download jika sudah lunas.</p>
+            
+            <button 
+              onClick={() => {
+                navigator.clipboard.writeText(paymentCodeData.url);
+                alert("Link berhasil disalin! Silakan buka Safari/Chrome dan tempel (paste) link tersebut.");
+              }} 
+              className="w-full bg-blue-600 hover:bg-blue-500 text-white py-4 rounded-xl font-bold uppercase tracking-widest text-[10px] flex items-center justify-center gap-2 transition-all mb-3"
+            >
+              Salin Link Pembayaran
+            </button>
+            
+            <button 
+              onClick={() => {
+                window.open(paymentCodeData.url, '_blank');
+              }} 
+              className="w-full bg-zinc-100 hover:bg-zinc-200 text-zinc-900 py-4 rounded-xl font-bold uppercase tracking-widest text-[10px] flex items-center justify-center gap-2 transition-all"
+            >
+              Buka di Tab Baru
+            </button>
+            
+            <p className="text-[9px] text-zinc-400 italic mt-6 text-center">*Sistem gerbang pembayaran akan meminta scan QRIS setelah Anda membuka link tersebut di browser utama.</p>
           </div>
         </div>
       )}

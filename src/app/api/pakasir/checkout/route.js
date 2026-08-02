@@ -1,29 +1,22 @@
 import { NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
+
 import { Pakasir } from 'pakasir';
 // import { supabase } from '@/supabaseClient'; // Buka komentar ini saat database siap
 
 export async function POST(req) {
   try {
     const body = await req.json();
-    const { cart, totalHarga } = body;
+    const { payCode, totalHarga } = body;
 
-    if (!cart || cart.length === 0) {
-      return NextResponse.json({ error: 'Keranjang kosong' }, { status: 400 });
+    if (!payCode || !totalHarga) {
+      return NextResponse.json({ error: 'Kode pembayaran tidak valid' }, { status: 400 });
     }
 
-    // 1. Buat ID Pesanan Unik (Order ID)
-    const orderId = `RFX-${Date.now()}`;
-
-    // Ekstrak ID template yang dibeli
-    const itemIds = cart.map(item => item.id).join(',');
-    const cookieStore = await cookies();
-    cookieStore.set(`rfx_pending_${orderId}`, itemIds, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: 60 * 60 // 1 jam masa berlaku order
-    });
+    // Buat ID Pesanan Unik yang STAFELESS (mengandung data template)
+    // Format: RFX-[encodedTemplateIds]-[Timestamp]
+    // Contoh payCode input: RFX-dHBsLTAx
+    // Hasil orderId: RFX-dHBsLTAx-1785600684096
+    const orderId = `${payCode}-${Date.now()}`;
 
     // 2. (Opsional tapi Direkomendasikan) Simpan Data Pesanan Sementara ke Supabase
     /*
