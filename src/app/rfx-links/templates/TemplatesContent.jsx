@@ -39,7 +39,7 @@ const TemplatesContent = () => {
     
     setPaymentCodeData({
       code: payCode,
-      url: `https://rfxvisual.com/rfx-links/pay?code=${payCode}`
+      url: `https://link.rfxvisual.my.id/pay?code=${payCode}`
     });
   };
 
