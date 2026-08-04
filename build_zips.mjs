@@ -15,7 +15,7 @@ if (!fs.existsSync(privateDir)) {
 
 const packageJsonContent = `{
   "name": "rfx-template",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -24,15 +24,15 @@ const packageJsonContent = `{
     "lint": "next lint"
   },
   "dependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "next": "^14.0.0",
-    "framer-motion": "^10.16.4",
-    "lucide-react": "^0.292.0"
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "next": "^16.2.9",
+    "framer-motion": "^10.18.0",
+    "lucide-react": "^0.300.0"
   },
   "devDependencies": {
-    "tailwindcss": "^3.3.0",
-    "postcss": "^8.4.31",
+    "tailwindcss": "^3.4.0",
+    "postcss": "^8.4.32",
     "autoprefixer": "^10.4.16"
   }
 }`;
@@ -92,7 +92,7 @@ for (const tpl of templates) {
   const sourceContent = fs.readFileSync(path.resolve(tpl.sourceFile), 'utf-8');
   fs.writeFileSync(path.join(appFolder, 'page.jsx'), sourceContent);
   
-  // Create zip using powershell
+  // Create zip using the native zip command so the package can be rebuilt on Linux CI/hosting environments.
   const zipPath = path.join(privateDir, `${tpl.id}.zip`);
   if (fs.existsSync(zipPath)) {
     fs.unlinkSync(zipPath);
@@ -100,14 +100,15 @@ for (const tpl of templates) {
   
   console.log(`Zipping ${tpl.id}...`);
   try {
-    execSync(`powershell.exe -Command "Compress-Archive -Path '${tempFolder}\\*' -DestinationPath '${zipPath}' -Force"`);
+    execSync(`zip -qr ${JSON.stringify(zipPath)} .`, { cwd: tempFolder });
     console.log(`Created ${zipPath}`);
   } catch (e) {
     console.error(`Failed to zip ${tpl.id}`, e.message);
+    process.exitCode = 1;
+  } finally {
+    // Cleanup
+    fs.rmSync(tempFolder, { recursive: true, force: true });
   }
-  
-  // Cleanup
-  fs.rmSync(tempFolder, { recursive: true, force: true });
 }
 
 console.log("All templates built and zipped.");
