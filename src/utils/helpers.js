@@ -59,3 +59,53 @@ export const generatePuterContent = async (prompt) => {
     return 'Gagal menghubungi Rexa. Cek koneksi kamu ya.';
   }
 };
+
+
+const parseJsonArrayField = (value) => {
+  if (Array.isArray(value)) return value;
+  if (typeof value !== 'string') return [];
+
+  const trimmed = value.trim();
+  if (!trimmed) return [];
+
+  try {
+    const parsed = JSON.parse(trimmed);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+};
+
+export const normalizePricelist = (item = {}) => ({
+  ...item,
+  packages: parseJsonArrayField(item.packages),
+  extra_info: parseJsonArrayField(item.extra_info),
+  terms: parseJsonArrayField(item.terms),
+});
+
+export const normalizePricelistPayload = (payload = {}) => {
+  const normalized = normalizePricelist(payload);
+
+  return {
+    ...normalized,
+    title: String(normalized.title || '').trim(),
+    subtitle: String(normalized.subtitle || '').trim(),
+    packages: Array.isArray(normalized.packages) ? normalized.packages : [],
+    extra_info: Array.isArray(normalized.extra_info) ? normalized.extra_info : [],
+    terms: Array.isArray(normalized.terms) ? normalized.terms : [],
+  };
+};
+
+export const getAiTextContent = (response) => {
+  if (!response) return '';
+  if (typeof response === 'string') return response;
+  if (typeof response.message?.content === 'string') return response.message.content;
+  if (Array.isArray(response.message?.content)) {
+    return response.message.content.map(part => part?.text || part?.content || '').join('\n');
+  }
+  if (typeof response.content === 'string') return response.content;
+  if (Array.isArray(response.content)) {
+    return response.content.map(part => part?.text || part?.content || '').join('\n');
+  }
+  return String(response);
+};

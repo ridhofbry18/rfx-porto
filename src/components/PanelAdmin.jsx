@@ -3,7 +3,7 @@
 import React, { useState } from 'react'
 import { Edit, Trash2, X, Lock, ExternalLink, Layout, Sparkles, Play, AlertCircle, LogOut, Image as ImageIcon, BookOpen, Instagram } from 'lucide-react'
 import { uploadFotoCloudinary, uploadVideoCloudinary } from '../utils/cloudinary'
-import { convertImageLink, convertToCustomYoutube, convertGDriveToPreview, getYoutubeId } from '../utils/helpers'
+import { convertImageLink, convertToCustomYoutube, convertGDriveToPreview, getYoutubeId, getAiTextContent, normalizePricelist, normalizePricelistPayload } from '../utils/helpers'
 import IGLayout from './IGLayout'
 
 const PanelAdmin = ({
@@ -76,6 +76,9 @@ const PanelAdmin = ({
     if (!file) return;
     setIsPdfExtracting(true);
     try {
+      if (!window.puter?.ai?.chat) {
+        throw new Error('Puter AI belum siap. Tunggu beberapa detik lalu coba upload ulang PDF.');
+      }
       const pdfjsLib = await import('pdfjs-dist');
       const pdfjsWorker = await import('pdfjs-dist/build/pdf.worker.mjs?url');
       pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorker.default;
@@ -95,13 +98,12 @@ const PanelAdmin = ({
 Text to extract: ${text}`;
 
       const response = await window.puter.ai.chat(prompt, { model: 'gpt-4o-mini' });
-      const jsonStr = response.message.content.match(/\{[\s\S]*\}/)[0];
-      const data = JSON.parse(jsonStr);
+      const aiText = getAiTextContent(response);
+      const jsonMatch = aiText.match(/\{[\s\S]*\}/);
+      if (!jsonMatch) throw new Error('AI tidak mengembalikan JSON yang valid.');
+      const data = normalizePricelistPayload(JSON.parse(jsonMatch[0]));
 
-      setPricelistBaru({
-        title: data.title || '', subtitle: data.subtitle || '',
-        packages: data.packages || [], extra_info: data.extra_info || [], terms: data.terms || []
-      });
+      setPricelistBaru(data);
       alert("Berhasil ekstrak data! Silakan periksa form.");
       setIsFormBuka(true);
     } catch (err) {
@@ -695,7 +697,7 @@ Text to extract: ${text}`;
               {tabAdmin === 'pricelist' && (
                 <div className="flex flex-col md:flex-row gap-10">
                   <div className={`flex-1 space-y-6 ${isFormBuka ? 'block' : 'hidden md:block'}`}>
-                    <form onSubmit={(e) => { e.preventDefault(); handleSimpanPricelist(pricelistBaru, idEdit).then(resetForms); }} className="space-y-4">
+                    <form onSubmit={(e) => { e.preventDefault(); handleSimpanPricelist(normalizePricelistPayload(pricelistBaru), idEdit).then(resetForms); }} className="space-y-4">
                       <h4 className="text-white font-bold uppercase tracking-widest text-xs">Tambah/Edit Pricelist Kategori</h4>
 
                       {/* PDF EXTRACTOR BUTTON */}
@@ -744,11 +746,11 @@ Text to extract: ${text}`;
                         <div className="flex justify-between items-start mb-2">
                           <h4 className="text-xs font-black text-white uppercase">{item.title}</h4>
                           <div className="flex gap-2">
-                            <button onClick={() => { setPricelistBaru(item); setIdEdit(item.id); setIsFormBuka(true); }} className="text-zinc-500 hover:text-white"><Edit className="w-3 h-3" /></button>
+                            <button onClick={() => { setPricelistBaru(normalizePricelist(item)); setIdEdit(item.id); setIsFormBuka(true); }} className="text-zinc-500 hover:text-white"><Edit className="w-3 h-3" /></button>
                             <button onClick={() => tanganiHapusPricelist(item.id)} className="text-zinc-500 hover:text-red-500"><Trash2 className="w-3 h-3" /></button>
                           </div>
                         </div>
-                        <p className="text-[10px] text-zinc-500">{item.packages.length} Paket Tersedia</p>
+                        <p className="text-[10px] text-zinc-500">{normalizePricelist(item).packages.length} Paket Tersedia</p>
                       </div>
                     ))}
                   </div>

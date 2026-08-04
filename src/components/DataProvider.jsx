@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react'
 import { supabase } from '@/lib/supabaseClient'
 import { defaultSkills, defaultExperiences } from '@/utils/constants'
+import { normalizePricelist } from '@/utils/helpers'
 
 const DataContext = createContext(null)
 
@@ -109,7 +110,7 @@ export function DataProvider({ children }) {
       if (dataWeb) setDaftarWebsite(dataWeb)
 
       const { data: pricelistsData } = await supabase.from('pricelists').select('*').order('id', { ascending: true })
-      if (pricelistsData) setDaftarPricelist(pricelistsData)
+      if (pricelistsData) setDaftarPricelist(pricelistsData.map(normalizePricelist))
 
       const { data: articles } = await supabase.from('artikel').select('*').order('id', { ascending: false })
       if (articles) setDaftarArtikel(articles)
