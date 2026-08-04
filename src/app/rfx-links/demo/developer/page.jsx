@@ -11,6 +11,13 @@ export default function DeveloperTemplate() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
+    document.body.style.overflow = isMenuOpen ? 'hidden' : '';
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isMenuOpen]);
+
+  useEffect(() => {
     const handleScroll = () => {
       const sections = ['home', 'about', 'stack', 'experience', 'projects', 'testimonials', 'contact'];
       let current = 'home';
@@ -89,7 +96,7 @@ export default function DeveloperTemplate() {
   const filteredProjects = activeFilter === 'All' ? projects : projects.filter(p => p.category === activeFilter);
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-zinc-300 font-sans selection:bg-zinc-800 selection:text-white relative">
+    <div className="min-h-screen overflow-x-hidden bg-[#0a0a0a] text-zinc-300 font-sans selection:bg-zinc-800 selection:text-white relative">
       
       {/* Interactive Cursor Glow */}
       <div 
@@ -106,7 +113,7 @@ export default function DeveloperTemplate() {
       
       {/* NAVBAR */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-[#0a0a0a]/80 backdrop-blur-md border-b border-zinc-800/50">
-        <div className="max-w-6xl mx-auto px-6 h-16 flex justify-between items-center">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex justify-between items-center">
           <div className="flex items-center gap-2 cursor-pointer" onClick={() => scrollTo('home')}>
             <Terminal className="w-5 h-5 text-zinc-100" />
             <span className="font-bold text-sm text-zinc-100 tracking-tight">dev.portfolio</span>
@@ -140,7 +147,7 @@ export default function DeveloperTemplate() {
         {isMenuOpen && (
           <motion.div 
             initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}
-            className="fixed inset-0 z-40 bg-[#0a0a0a]/95 backdrop-blur-lg pt-24 px-6 md:hidden border-b border-zinc-800/50 flex flex-col h-fit pb-8 shadow-2xl"
+            className="fixed inset-0 z-40 bg-[#0a0a0a]/95 backdrop-blur-lg pt-24 px-4 sm:px-6 md:hidden border-b border-zinc-800/50 flex flex-col min-h-dvh pb-8 shadow-2xl overflow-y-auto"
           >
             <div className="flex flex-col gap-2">
                {['home', 'about', 'stack', 'experience', 'projects', 'contact'].map(item => (
@@ -157,11 +164,11 @@ export default function DeveloperTemplate() {
         )}
       </AnimatePresence>
 
-      <main className="relative z-10 max-w-6xl mx-auto">
+      <main className="relative z-10 max-w-6xl mx-auto overflow-x-hidden">
         {/* HERO SECTION */}
-        <section id="home" className="pt-40 pb-20 px-6 min-h-[90vh] flex flex-col justify-center">
+        <section id="home" className="pt-28 sm:pt-36 md:pt-40 pb-16 md:pb-20 px-4 sm:px-6 min-h-[90svh] flex flex-col justify-center">
           <motion.div variants={staggerContainer} initial="hidden" animate="visible" className="w-full">
-            <motion.div variants={fadeUpVariant} className="inline-flex items-center gap-3 px-3 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-xs font-mono text-zinc-400 mb-8">
+            <motion.div variants={fadeUpVariant} className="inline-flex max-w-full items-center gap-3 px-3 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-[11px] sm:text-xs font-mono text-zinc-400 mb-8">
               <span className="relative flex h-2 w-2">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
@@ -169,7 +176,7 @@ export default function DeveloperTemplate() {
               System Online: Ready for deployment
             </motion.div>
             
-            <motion.h1 variants={fadeUpVariant} className="text-5xl md:text-7xl font-bold text-white tracking-tight leading-tight mb-6 max-w-4xl">
+            <motion.h1 variants={fadeUpVariant} className="text-[2.6rem] min-[380px]:text-5xl md:text-7xl font-bold text-white tracking-tight leading-[1.05] md:leading-tight mb-6 max-w-4xl break-words">
               Engineering robust systems & <span className="text-zinc-500">scalable architectures.</span>
             </motion.h1>
             
@@ -177,7 +184,7 @@ export default function DeveloperTemplate() {
               Senior Software Engineer specializing in full-stack development, modern cloud infrastructure, and building high-performance applications that handle millions of requests.
             </motion.p>
             
-            <motion.div variants={fadeUpVariant} className="flex flex-wrap items-center gap-4">
+            <motion.div variants={fadeUpVariant} className="flex flex-col min-[420px]:flex-row flex-wrap items-stretch min-[420px]:items-center gap-3 sm:gap-4">
               <button onClick={() => scrollTo('projects')} className="px-6 py-3 bg-white hover:bg-zinc-200 text-black text-sm font-semibold rounded-lg transition-colors flex items-center gap-2">
                 Init Deployment <ChevronRight className="w-4 h-4" />
               </button>
@@ -187,14 +194,14 @@ export default function DeveloperTemplate() {
             </motion.div>
             
             {/* Terminal Mockup snippet */}
-            <motion.div variants={fadeUpVariant} className="mt-20 max-w-3xl rounded-xl overflow-hidden border border-zinc-800 bg-zinc-950/50 backdrop-blur-sm">
+            <motion.div variants={fadeUpVariant} className="mt-12 sm:mt-20 max-w-3xl rounded-xl overflow-hidden border border-zinc-800 bg-zinc-950/50 backdrop-blur-sm">
               <div className="flex items-center px-4 py-2 bg-zinc-900 border-b border-zinc-800 gap-2">
                 <div className="w-3 h-3 rounded-full bg-red-500/20 border border-red-500/50"></div>
                 <div className="w-3 h-3 rounded-full bg-yellow-500/20 border border-yellow-500/50"></div>
                 <div className="w-3 h-3 rounded-full bg-green-500/20 border border-green-500/50"></div>
                 <div className="text-[10px] text-zinc-500 font-mono ml-2">~ /dev/portfolio/init.sh</div>
               </div>
-              <div className="p-6 font-mono text-xs sm:text-sm text-zinc-400 space-y-2">
+              <div className="overflow-x-auto p-4 sm:p-6 font-mono text-xs sm:text-sm text-zinc-400 space-y-2">
                 <div className="flex gap-2">
                   <span className="text-green-500">➜</span>
                   <span className="text-blue-400">~</span>
@@ -214,7 +221,7 @@ export default function DeveloperTemplate() {
         </section>
 
         {/* ABOUT SECTION (SYSTEM OVERVIEW) */}
-        <section id="about" className="py-24 px-6 border-t border-zinc-900/50">
+        <section id="about" className="py-16 md:py-24 px-4 sm:px-6 border-t border-zinc-900/50">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUpVariant} className="flex flex-col md:flex-row gap-12 lg:gap-20 items-center">
             
             {/* Image / Identity */}
@@ -279,7 +286,7 @@ export default function DeveloperTemplate() {
         </section>
 
         {/* TECH STACK & ARCHITECTURE */}
-        <section id="stack" className="py-24 px-6 border-t border-zinc-900/50">
+        <section id="stack" className="py-16 md:py-24 px-4 sm:px-6 border-t border-zinc-900/50">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUpVariant} className="mb-16">
             <div className="flex items-center gap-2 mb-4">
               <Cpu className="w-5 h-5 text-zinc-500" />
@@ -345,7 +352,7 @@ export default function DeveloperTemplate() {
         </section>
 
         {/* CAREER TIMELINE / EXPERIENCE (NEW) */}
-        <section id="experience" className="py-24 px-6 border-t border-zinc-900/50">
+        <section id="experience" className="py-16 md:py-24 px-4 sm:px-6 border-t border-zinc-900/50">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUpVariant} className="mb-16">
             <div className="flex items-center gap-2 mb-4">
               <GitBranch className="w-5 h-5 text-zinc-500" />
@@ -393,7 +400,7 @@ export default function DeveloperTemplate() {
         </section>
 
         {/* PROJECTS SECTION (INTERACTIVE) */}
-        <section id="projects" className="py-24 px-6 border-t border-zinc-900/50">
+        <section id="projects" className="py-16 md:py-24 px-4 sm:px-6 border-t border-zinc-900/50">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUpVariant} className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
             <div>
               <div className="flex items-center gap-2 mb-4">
@@ -404,7 +411,7 @@ export default function DeveloperTemplate() {
             </div>
             
             {/* Filter Buttons */}
-            <div className="flex gap-2 bg-zinc-900/50 p-1 rounded-lg border border-zinc-800/50">
+            <div className="flex w-full overflow-x-auto gap-2 bg-zinc-900/50 p-1 rounded-lg border border-zinc-800/50 md:w-auto">
               {['All', 'Frontend', 'Backend', 'Fullstack'].map(filter => (
                 <button 
                   key={filter}
@@ -431,7 +438,7 @@ export default function DeveloperTemplate() {
                   exit={{ opacity: 0, scale: 0.95, filter: 'blur(4px)' }}
                   transition={{ duration: 0.4 }}
                   key={project.id} 
-                  className="group flex flex-col lg:flex-row gap-8 items-center bg-zinc-900/20 p-4 rounded-2xl border border-transparent hover:border-zinc-800/50 transition-colors"
+                  className="group flex flex-col lg:flex-row gap-6 lg:gap-8 items-center bg-zinc-900/20 p-3 sm:p-4 rounded-2xl border border-zinc-800/40 lg:border-transparent hover:border-zinc-800/50 transition-colors"
                 >
                   <div className="w-full lg:w-1/2 aspect-video rounded-xl overflow-hidden bg-zinc-900 border border-zinc-800 relative">
                     <img src={project.img} alt={project.title} className="w-full h-full object-cover opacity-60 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" />
@@ -448,7 +455,7 @@ export default function DeveloperTemplate() {
                         <span key={t} className="text-[10px] font-mono text-zinc-500 bg-zinc-900 px-2 py-1 rounded border border-zinc-800">{t}</span>
                       ))}
                     </div>
-                    <div className="flex items-center gap-4">
+                    <div className="flex flex-col min-[420px]:flex-row min-[420px]:items-center gap-3 min-[420px]:gap-4">
                       <a href={project.link} className="inline-flex items-center gap-2 text-sm font-medium text-white hover:text-zinc-300 transition-colors bg-zinc-800 px-4 py-2 rounded-lg border border-zinc-700">
                         View Source <Github className="w-4 h-4" />
                       </a>
@@ -464,7 +471,7 @@ export default function DeveloperTemplate() {
         </section>
 
         {/* PEER RECOMMENDATIONS / TESTIMONIALS (NEW) */}
-        <section className="py-24 px-6 border-t border-zinc-900/50">
+        <section className="py-16 md:py-24 px-4 sm:px-6 border-t border-zinc-900/50">
            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUpVariant} className="mb-16">
             <div className="flex items-center gap-2 mb-4">
               <Quote className="w-5 h-5 text-zinc-500" />
@@ -505,7 +512,7 @@ export default function DeveloperTemplate() {
         </section>
 
         {/* CONTACT SECTION */}
-        <section id="contact" className="py-24 px-6 border-t border-zinc-900/50">
+        <section id="contact" className="py-16 md:py-24 px-4 sm:px-6 border-t border-zinc-900/50">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUpVariant} className="max-w-4xl mx-auto">
             <div className="text-center mb-16">
               <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-zinc-900 border border-zinc-800 mb-6">
@@ -533,7 +540,7 @@ export default function DeveloperTemplate() {
               {/* Terminal Body as Form */}
               <form className="p-6 sm:p-8 font-mono text-sm space-y-6">
                 <div>
-                  <label className="flex items-center gap-2 text-zinc-400 mb-2">
+                  <label className="flex flex-wrap items-center gap-2 text-zinc-400 mb-2">
                     <span className="text-green-500">➜</span>
                     <span className="text-blue-400">const</span>
                     <span className="text-yellow-200">name</span>
@@ -543,7 +550,7 @@ export default function DeveloperTemplate() {
                 </div>
                 
                 <div>
-                  <label className="flex items-center gap-2 text-zinc-400 mb-2">
+                  <label className="flex flex-wrap items-center gap-2 text-zinc-400 mb-2">
                     <span className="text-green-500">➜</span>
                     <span className="text-blue-400">const</span>
                     <span className="text-yellow-200">email</span>
@@ -553,7 +560,7 @@ export default function DeveloperTemplate() {
                 </div>
 
                 <div>
-                  <label className="flex items-center gap-2 text-zinc-400 mb-2">
+                  <label className="flex flex-wrap items-center gap-2 text-zinc-400 mb-2">
                     <span className="text-green-500">➜</span>
                     <span className="text-blue-400">const</span>
                     <span className="text-yellow-200">payload</span>
@@ -562,7 +569,7 @@ export default function DeveloperTemplate() {
                   <textarea rows="4" placeholder="`Type your message here...`" className="w-full bg-zinc-900/30 border border-zinc-800 focus:border-green-500 outline-none text-zinc-300 placeholder:text-zinc-700 p-4 rounded-lg resize-none transition-colors font-mono mt-2"></textarea>
                 </div>
 
-                <div className="pt-4 flex items-center justify-between">
+                <div className="pt-4 flex flex-col min-[420px]:flex-row min-[420px]:items-center justify-between gap-4">
                   <div className="text-xs text-zinc-600 animate-pulse">Awaiting input...</div>
                   <button type="button" className="px-6 py-2 bg-white text-black font-bold font-sans text-sm rounded hover:bg-zinc-200 transition-colors flex items-center gap-2 group shadow-[0_0_15px_rgba(255,255,255,0.1)]">
                     <Terminal className="w-4 h-4 group-hover:text-blue-600 transition-colors" /> Execute
