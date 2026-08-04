@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { CheckCircle2, ChevronLeft, AlertCircle } from 'lucide-react';
 import { useData } from '@/components/DataProvider';
+import { normalizePricelist } from '@/utils/helpers';
 
 const FormBookingContent = () => {
   const { daftarPricelist = [] } = useData();
@@ -72,7 +73,8 @@ Mohon konfirmasi ketersediaan jadwal dan total biaya. Terima kasih!`;
     window.open(`https://wa.me/${hpAdmin}?text=${encodeURIComponent(text)}`, '_blank');
   };
 
-  const kategoriDipilih = daftarPricelist.find(k => k.title === formData.kategoriAcara);
+  const normalizedPricelists = daftarPricelist.map(normalizePricelist);
+  const kategoriDipilih = normalizedPricelists.find(k => k.title === formData.kategoriAcara);
 
   return (
     <div className="min-h-screen bg-[#050505] text-white font-sans py-16 px-6 relative overflow-x-hidden">
@@ -115,7 +117,7 @@ Mohon konfirmasi ketersediaan jadwal dan total biaya. Terima kasih!`;
                 <label className="text-[10px] text-zinc-400 uppercase font-bold tracking-widest">Kategori Acara <span className="text-red-500">*</span></label>
                 <select name="kategoriAcara" value={formData.kategoriAcara} onChange={tanganiInput} required className="w-full bg-black/50 border border-white/10 rounded-xl px-5 py-4 text-white text-xs outline-none focus:border-red-600 transition-colors appearance-none">
                   <option value="" disabled>Pilih Kategori</option>
-                  {daftarPricelist.map(list => <option key={list.id} value={list.title}>{list.title}</option>)}
+                  {normalizedPricelists.map(list => <option key={list.id} value={list.title}>{list.title}</option>)}
                 </select>
               </div>
               {formData.kategoriAcara && kategoriDipilih && (
