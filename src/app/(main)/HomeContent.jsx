@@ -337,7 +337,39 @@ const AnimatedInstagramGrid = ({ igPosts, instagramConfig, configSitus }) => {
   )
 }
 
-const HomeContent = () => {
+const HomeHeroSkeleton = () => (
+  <>
+    <TransitionEffect />
+    <section className="relative min-h-screen w-full overflow-hidden bg-[#050505] flex items-center justify-center">
+      <div className="absolute inset-4 md:inset-10 border-white/10 pointer-events-none z-20">
+        <div className="absolute top-0 left-0 w-12 h-12 md:w-16 md:h-16 border-t-2 border-l-2 border-white/20" />
+        <div className="absolute top-0 right-0 w-12 h-12 md:w-16 md:h-16 border-t-2 border-r-2 border-white/20" />
+        <div className="absolute bottom-0 left-0 w-12 h-12 md:w-16 md:h-16 border-b-2 border-l-2 border-white/20" />
+        <div className="absolute bottom-0 right-0 w-12 h-12 md:w-16 md:h-16 border-b-2 border-r-2 border-white/20" />
+      </div>
+
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_20%,rgba(148,56,56,0.18),transparent_38%),radial-gradient(circle_at_50%_85%,rgba(255,255,255,0.08),transparent_30%)]" />
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff08_1px,transparent_1px),linear-gradient(to_bottom,#ffffff08_1px,transparent_1px)] bg-[size:48px_48px] opacity-30 [mask-image:radial-gradient(ellipse_70%_55%_at_50%_50%,#000_35%,transparent_100%)]" />
+
+      <div className="absolute top-24 left-8 md:top-32 md:left-20 z-20 h-8 w-56 md:w-72 rounded-full bg-white/10 animate-pulse" />
+
+      <div className="relative z-10 w-full flex flex-col items-center justify-center gap-3 select-none">
+        <div className="h-[18vw] md:h-[11vw] w-[86vw] md:w-[58vw] rounded-[2rem] bg-white/10 animate-pulse shadow-[0_0_40px_rgba(255,255,255,0.08)]" />
+        <div className="h-[18vw] md:h-[11vw] w-[82vw] md:w-[54vw] rounded-[2rem] bg-white/10 animate-pulse shadow-[0_0_40px_rgba(255,255,255,0.08)] [animation-delay:180ms]" />
+      </div>
+
+      <div className="absolute z-20 bottom-24 md:bottom-10 left-1/2 -translate-x-1/2 w-[70%] max-w-[420px] h-[58vh] md:h-[72vh] rounded-t-full bg-gradient-to-b from-white/15 via-white/10 to-transparent animate-pulse blur-[1px]" />
+      <div className="absolute z-30 bottom-8 left-8 md:bottom-20 md:left-20 h-8 w-44 md:w-56 rounded-full bg-white/10 animate-pulse" />
+      <div className="absolute z-30 bottom-10 right-10 md:bottom-20 md:right-20 hidden md:flex gap-3">
+        {[0, 1, 2, 3].map(item => (
+          <div key={item} className="w-10 h-10 rounded-lg bg-white/10 animate-pulse" />
+        ))}
+      </div>
+    </section>
+  </>
+)
+
+const LoadedHomeContent = () => {
   const router = useRouter()
   const { configSitus, instagramConfig, daftarArtikel } = useData()
 
@@ -469,6 +501,14 @@ const HomeContent = () => {
       </div>
     </>
   )
+}
+
+const HomeContent = () => {
+  const { isLoading } = useData()
+
+  if (isLoading) return <HomeHeroSkeleton />
+
+  return <LoadedHomeContent />
 }
 
 export default HomeContent;
