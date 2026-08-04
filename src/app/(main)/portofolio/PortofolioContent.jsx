@@ -3,6 +3,7 @@
 import React, { useState, Suspense, useRef, useEffect } from 'react'
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
 import { useData } from '@/components/DataProvider'
+import { getYoutubeEmbedUrl, getYoutubeId } from '@/utils/helpers'
 import { Play, ChevronRight, ChevronLeft, Globe, Film, Clapperboard, Camera, X } from 'lucide-react'
 import AnimatedText from '@/components/AnimatedText'
 import TransitionEffect from '@/components/TransitionEffect'
@@ -13,16 +14,12 @@ import { Canvas, useFrame } from '@react-three/fiber'
 import { useGLTF, Html, OrbitControls, Environment, ContactShadows, PresentationControls, useProgress } from '@react-three/drei'
 
 // --- MODAL YOUTUBE/VIDEO PLAYER ---
+const getProjectVideoUrl = (item) => item?.youtubeUrl || item?.youtube_url || item?.videoUrl || item?.video_url || item?.link_web || item?.image || '';
+
 const VideoModal = ({ isOpen, onClose, videoUrl, videoType }) => {
   if (!isOpen) return null;
-  const getYoutubeId = (url) => {
-    if (!url) return null;
-    const regExp = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/|youtube\.com\/shorts\/|youtube\/)([^"&?\/\s]{11})/i;
-    const match = url.match(regExp);
-    return match ? match[1] : null;
-  };
   const videoId = getYoutubeId(videoUrl);
-  const isYoutube = videoType === 'youtube' || (videoUrl && (videoUrl.includes('youtube') || videoUrl.includes('youtu.be')));
+  const isYoutube = Boolean(videoId) || videoType === 'youtube';
   const isShorts = videoUrl && videoUrl.includes('shorts');
   const isVideoFile = !isYoutube && videoUrl && videoUrl.match(/\.(mp4|mov|webm|ogg)(\?.*)?$/i);
 
@@ -37,7 +34,7 @@ const VideoModal = ({ isOpen, onClose, videoUrl, videoType }) => {
       >
         {isYoutube ? (
           videoId ? (
-            <iframe title="Youtube player" src={`https://www.youtube.com/embed/${videoId}?autoplay=1`} className="w-full h-full" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen />
+            <iframe title="Youtube player" src={getYoutubeEmbedUrl(videoUrl, true)} className="w-full h-full" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen />
           ) : (
             <div className="text-white text-sm">Video Invalid</div>
           )
@@ -157,7 +154,7 @@ const TvDeepDive = ({ data, subcategories, onOpenVideo, onClose }) => {
                  {/* Video Grid inside TV */}
                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pb-12">
                    {filteredData.map(video => (
-                     <div key={video.id} className="group relative rounded-xl overflow-hidden cursor-pointer shadow-lg bg-[#111] border border-white/10" onClick={() => onOpenVideo(video.link_web || video.image, video.videoType)}>
+                     <div key={video.id} className="group relative rounded-xl overflow-hidden cursor-pointer shadow-lg bg-[#111] border border-white/10" onClick={() => onOpenVideo(getProjectVideoUrl(video), video.videoType)}>
                        <div className="aspect-video relative overflow-hidden">
                          <img src={video.image} alt={video.title} className="w-full h-full object-cover opacity-80 group-hover:scale-105 group-hover:opacity-100 transition-all" />
                          <div className="absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-transparent">
@@ -488,7 +485,7 @@ const LaptopDeepDive = ({ animData, webData, onOpenVideo, onClose }) => {
                  <div className="bg-[#333] text-white/80 text-[10px] uppercase font-bold p-1 px-2 border-b border-[#222]">Project</div>
                  <div className="flex-1 overflow-y-auto p-2 flex flex-col gap-1">
                    {animData.map(anim => (
-                     <div key={anim.id} className="flex items-center gap-2 text-white/70 text-[11px] p-1.5 hover:bg-[#444] cursor-pointer rounded transition-colors" onClick={() => onOpenVideo(anim.link_web || anim.image, anim.videoType)}>
+                     <div key={anim.id} className="flex items-center gap-2 text-white/70 text-[11px] p-1.5 hover:bg-[#444] cursor-pointer rounded transition-colors" onClick={() => onOpenVideo(getProjectVideoUrl(anim), anim.videoType)}>
                        <Film className="w-3 h-3 text-[#cf80ff] shrink-0" />
                        <span className="truncate">{anim.title}.mp4</span>
                      </div>
@@ -499,7 +496,7 @@ const LaptopDeepDive = ({ animData, webData, onOpenVideo, onClose }) => {
                  <div className="bg-[#333] text-white/80 text-[10px] uppercase font-bold p-1 px-2 border-b border-[#222]">Composition</div>
                  <div className="flex-1 flex flex-col items-center justify-start p-6 overflow-y-auto gap-8 bg-[linear-gradient(45deg,#1a1a1a_25%,transparent_25%,transparent_75%,#1a1a1a_75%,#1a1a1a),linear-gradient(45deg,#1a1a1a_25%,transparent_25%,transparent_75%,#1a1a1a_75%,#1a1a1a)] bg-[length:20px_20px] bg-[position:0_0,10px_10px]">
                    {animData.map(anim => (
-                     <div key={anim.id} className="w-full max-w-2xl bg-black rounded shadow-2xl border border-[#444] group cursor-pointer" onClick={() => onOpenVideo(anim.link_web || anim.image, anim.videoType)}>
+                     <div key={anim.id} className="w-full max-w-2xl bg-black rounded shadow-2xl border border-[#444] group cursor-pointer" onClick={() => onOpenVideo(getProjectVideoUrl(anim), anim.videoType)}>
                        <div className="w-full aspect-video relative">
                          <img src={anim.image} alt={anim.title} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" />
                          <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-transparent">
