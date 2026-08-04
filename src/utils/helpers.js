@@ -61,8 +61,21 @@ export const generatePuterContent = async (prompt) => {
 };
 
 
+const toPlainText = (value) => {
+  if (value === null || value === undefined) return '';
+  if (Array.isArray(value)) return value.map(toPlainText).filter(Boolean).join(' ');
+  if (typeof value === 'object') return value.name || value.title || value.label || value.text || value.description || JSON.stringify(value);
+  return String(value).trim();
+};
+
+const flattenArray = (value) => value.reduce((acc, item) => {
+  if (Array.isArray(item)) return acc.concat(flattenArray(item));
+  if (item !== null && item !== undefined && item !== '') acc.push(item);
+  return acc;
+}, []);
+
 const parseJsonArrayField = (value) => {
-  if (Array.isArray(value)) return value;
+  if (Array.isArray(value)) return flattenArray(value);
   if (typeof value !== 'string') return [];
 
   const trimmed = value.trim();
@@ -70,17 +83,39 @@ const parseJsonArrayField = (value) => {
 
   try {
     const parsed = JSON.parse(trimmed);
-    return Array.isArray(parsed) ? parsed : [];
+    return Array.isArray(parsed) ? flattenArray(parsed) : [];
   } catch {
-    return [];
+    return trimmed
+      .split(/\r?\n/)
+      .map(item => item.replace(/^[-*•\d.)\s]+/, '').trim())
+      .filter(Boolean);
   }
+};
+
+const normalizePackage = (pkg = {}, index = 0) => {
+  if (typeof pkg === 'string') {
+    return { name: pkg, price: '', features: [], note: '', isBestValue: false };
+  }
+
+  const features = parseJsonArrayField(
+    pkg.features || pkg.feature || pkg.includes || pkg.benefits || pkg.fasilitas || pkg.isi || []
+  ).map(toPlainText).filter(Boolean);
+
+  return {
+    ...pkg,
+    name: toPlainText(pkg.name || pkg.title || pkg.tier || pkg.package || pkg.paket || `Paket ${index + 1}`),
+    price: toPlainText(pkg.price || pkg.harga || pkg.amount || pkg.biaya || ''),
+    features,
+    note: toPlainText(pkg.note || pkg.notes || pkg.catatan || ''),
+    isBestValue: Boolean(pkg.isBestValue || pkg.bestValue || pkg.recommended || pkg.rekomendasi),
+  };
 };
 
 export const normalizePricelist = (item = {}) => ({
   ...item,
-  packages: parseJsonArrayField(item.packages),
-  extra_info: parseJsonArrayField(item.extra_info),
-  terms: parseJsonArrayField(item.terms),
+  packages: parseJsonArrayField(item.packages).map(normalizePackage),
+  extra_info: parseJsonArrayField(item.extra_info || item.extraInfo || item.extras).map(toPlainText).filter(Boolean),
+  terms: parseJsonArrayField(item.terms || item.syarat || item.ketentuan).map(toPlainText).filter(Boolean),
 });
 
 export const normalizePricelistPayload = (payload = {}) => {
@@ -90,9 +125,9 @@ export const normalizePricelistPayload = (payload = {}) => {
     ...normalized,
     title: String(normalized.title || '').trim(),
     subtitle: String(normalized.subtitle || '').trim(),
-    packages: Array.isArray(normalized.packages) ? normalized.packages : [],
-    extra_info: Array.isArray(normalized.extra_info) ? normalized.extra_info : [],
-    terms: Array.isArray(normalized.terms) ? normalized.terms : [],
+    packages: normalized.packages.filter(pkg => pkg.name || pkg.price || pkg.features.length > 0),
+    extra_info: normalized.extra_info,
+    terms: normalized.terms,
   };
 };
 

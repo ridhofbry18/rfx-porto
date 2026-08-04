@@ -79,13 +79,11 @@ const PanelAdmin = ({
       if (!window.puter?.ai?.chat) {
         throw new Error('Puter AI belum siap. Tunggu beberapa detik lalu coba upload ulang PDF.');
       }
-      const pdfjsLib = await import('pdfjs-dist');
-      const pdfjsWorker = await import('pdfjs-dist/build/pdf.worker.mjs?url');
-      pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorker.default;
+      const pdfjsLib = await import('pdfjs-dist/legacy/build/pdf.mjs');
 
       const arrayBuffer = await file.arrayBuffer();
       const typedArray = new Uint8Array(arrayBuffer);
-      const pdf = await pdfjsLib.getDocument({ data: typedArray }).promise;
+      const pdf = await pdfjsLib.getDocument({ data: typedArray, disableWorker: true }).promise;
       let text = '';
       for (let i = 1; i <= pdf.numPages; i++) {
         const page = await pdf.getPage(i);
@@ -93,9 +91,11 @@ const PanelAdmin = ({
         text += content.items.map(item => item.str).join(' ') + '\n';
       }
 
-      const prompt = `You are a data extractor. Extract the packages, prices, features, extra info, and terms from this pricelist text. Return ONLY a valid JSON object matching this schema, nothing else:
-{ "title": "Category Name", "subtitle": "Brief subtitle", "packages": [{"name": "Reguler", "price": "250k", "features": ["feature 1"], "note": "optional note", "isBestValue": false}], "extra_info": ["extra cost"], "terms": ["term 1"] }
-Text to extract: ${text}`;
+      const prompt = `Anda adalah extractor data pricelist. Ambil kategori layanan, subtitle, tier paket (contoh: Reguler, Premium, VIP), harga, fitur paket, tambahan/extra, dan syarat ketentuan dari teks PDF. Return ONLY JSON valid tanpa markdown, dengan schema persis:
+{ "title": "Nama Kategori", "subtitle": "Subtitle singkat", "packages": [{"name": "Reguler", "price": "Rp 250.000", "features": ["fitur 1"], "note": "catatan opsional", "isBestValue": false}], "extra_info": ["biaya tambahan"], "terms": ["syarat 1"] }
+Jangan membuat array bersarang seperti [[...]]. Jika ada tabel, setiap kolom tier paket wajib menjadi object dalam packages.
+Teks PDF:
+${text}`;
 
       const response = await window.puter.ai.chat(prompt, { model: 'gpt-4o-mini' });
       const aiText = getAiTextContent(response);
