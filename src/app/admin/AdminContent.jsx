@@ -5,6 +5,7 @@ import { supabase } from '@/lib/supabaseClient';
 import { useData } from '@/components/DataProvider';
 import PanelAdmin from '@/components/PanelAdmin';
 import TransitionEffect from '@/components/TransitionEffect';
+import { normalizePricelistPayload } from '@/utils/helpers';
 
 const AdminContent = () => {
   const {
@@ -179,11 +180,16 @@ const AdminContent = () => {
 
   const handleSimpanPricelist = async (payload, isEditId) => {
     try {
+      const normalizedPayload = normalizePricelistPayload(payload);
+      if (normalizedPayload.packages.length === 0) {
+        throw new Error('Minimal tambahkan 1 paket pricelist.');
+      }
+
       if (isEditId) {
-        const { error } = await supabase.from('pricelists').update(payload).eq('id', isEditId);
+        const { error } = await supabase.from('pricelists').update(normalizedPayload).eq('id', isEditId);
         if (error) throw error;
       } else {
-        const { error } = await supabase.from('pricelists').insert([payload]);
+        const { error } = await supabase.from('pricelists').insert([normalizedPayload]);
         if (error) throw error;
       }
       await refreshData();
