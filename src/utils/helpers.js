@@ -33,6 +33,12 @@ export const convertToCustomYoutube = (url) => {
   return id ? `https://youtube/${id}` : String(url).trim();
 };
 
+export const getYoutubeEmbedUrl = (url, autoplay = false) => {
+  const id = getYoutubeId(url);
+  if (!id) return '';
+  return `https://www.youtube.com/embed/${id}${autoplay ? '?autoplay=1' : ''}`;
+};
+
 export const convertGDriveToPreview = (url) => {
   if (!url) return url;
   const trimmed = String(url).trim();
