@@ -48,7 +48,7 @@ export default async function Page({ params }) {
   
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL) {
     return (
-      <div className="min-h-screen flex items-center justify-center text-white">
+      <div className="min-h-screen flex items-center justify-center text-muted">
         <h2>Koneksi database belum dikonfigurasi.</h2>
       </div>
     )
@@ -63,7 +63,7 @@ export default async function Page({ params }) {
 
     if (!artikel || error) {
       return (
-        <div className="min-h-screen flex items-center justify-center text-white">
+        <div className="min-h-screen flex items-center justify-center text-muted">
           <h2>Artikel tidak ditemukan</h2>
         </div>
       )
@@ -72,7 +72,7 @@ export default async function Page({ params }) {
     return <ArtikelDetail artikel={artikel} />
   } catch (err) {
     return (
-      <div className="min-h-screen flex items-center justify-center text-white">
+      <div className="min-h-screen flex items-center justify-center text-muted">
         <h2>Terjadi kesalahan pada database.</h2>
       </div>
     )

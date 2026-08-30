@@ -117,45 +117,45 @@ export default function PayClient() {
   const formatRupiah = (angka) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(angka);
 
   return (
-    <div className={`min-h-screen font-sans py-16 px-6 relative overflow-x-hidden flex items-center justify-center transition-colors duration-500 ${isDark ? 'bg-zinc-950 text-white' : 'bg-[#f4fcf4] text-zinc-900'}`}>
-      <div className={`w-full max-w-md rounded-[2rem] p-8 md:p-10 shadow-2xl relative overflow-hidden ${isDark ? 'bg-zinc-900 border border-zinc-800' : 'bg-white border border-zinc-200'}`}>
+    <div className={`min-h-screen font-sans py-16 px-6 relative overflow-x-hidden flex items-center justify-center transition-colors duration-500 bg-paper text-ink ${isDark ? 'theme-dark' : ''}`}>
+      <div className="w-full max-w-md rounded-lg p-8 md:p-10 shadow-2xl relative overflow-hidden bg-paper-2 border border-line">
         
         {/* Dekorasi BG */}
-        <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500 rounded-full blur-[100px] opacity-10 pointer-events-none -translate-y-1/2 translate-x-1/2"></div>
+        <div className="absolute top-0 right-0 w-64 h-64 bg-ink rounded-full blur-[100px] opacity-10 pointer-events-none -translate-y-1/2 translate-x-1/2"></div>
         
-        <button onClick={() => router.push('/rfx-links/templates')} className={`text-[10px] uppercase tracking-widest font-bold flex items-center gap-2 mb-8 relative z-10 transition-colors ${isDark ? 'text-zinc-500 hover:text-white' : 'text-zinc-500 hover:text-zinc-900'}`}>
+        <button onClick={() => router.push('/rfx-links/templates')} className="mono-label-sm text-muted hover:text-ink flex items-center gap-2 mb-8 relative z-10 transition-colors">
           <ChevronLeft className="w-3 h-3" /> Batal & Kembali
         </button>
 
         <div className="flex items-center gap-4 mb-8">
-          <div className="w-12 h-12 bg-blue-600 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-600/30">
-            <ShoppingCart className="w-6 h-6 text-white" />
+          <div className="w-12 h-12 bg-ink rounded-lg flex items-center justify-center shadow-lg">
+            <ShoppingCart className="w-6 h-6 text-paper" />
           </div>
           <div>
-            <h1 className="text-2xl font-black uppercase tracking-tighter">Secure Checkout</h1>
-            <p className={`text-[10px] font-bold uppercase tracking-widest ${isDark ? 'text-zinc-500' : 'text-zinc-400'}`}>Gerbang Pembayaran RFX</p>
+            <h1 className="text-2xl font-display uppercase tracking-tighter">Secure Checkout</h1>
+            <p className="mono-label-sm text-muted">Gerbang Pembayaran RFX</p>
           </div>
         </div>
 
         {error ? (
-          <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-6 text-center">
-            <AlertCircle className="w-10 h-10 text-red-500 mx-auto mb-3" />
-            <p className={`text-sm font-bold ${isDark ? 'text-white' : 'text-red-900'}`}>{error}</p>
-            <p className="text-[10px] text-red-500 mt-2">Pastikan link yang Anda salin utuh dan tidak terpotong.</p>
+          <div className="bg-paper border border-line rounded-lg p-6 text-center">
+            <AlertCircle className="w-10 h-10 text-ink mx-auto mb-3" />
+            <p className="text-sm font-bold text-ink">{error}</p>
+            <p className="text-[10px] text-muted mt-2">Pastikan link yang Anda salin utuh dan tidak terpotong.</p>
           </div>
         ) : (
           <>
             <div className={`mb-8 space-y-3 ${qrisData ? 'opacity-50 pointer-events-none' : ''}`}>
-              <h3 className={`text-[10px] uppercase tracking-widest font-bold border-b pb-2 mb-4 ${isDark ? 'text-zinc-500 border-zinc-800' : 'text-zinc-400 border-zinc-200'}`}>Ringkasan Pesanan</h3>
+              <h3 className="mono-label-sm text-muted border-b border-line pb-2 mb-4">Ringkasan Pesanan</h3>
               {cartItems.map((item, i) => (
                 <div key={i} className="flex justify-between items-center">
-                  <span className={`text-sm font-bold ${isDark ? 'text-zinc-300' : 'text-zinc-700'}`}>{item.title}</span>
-                  <span className={`text-xs font-medium ${isDark ? 'text-zinc-500' : 'text-zinc-500'}`}>{item.priceStr}</span>
+                  <span className="text-sm font-bold text-ink">{item.title}</span>
+                  <span className="text-xs font-medium text-muted">{item.priceStr}</span>
                 </div>
               ))}
-              <div className={`flex justify-between items-center pt-4 border-t ${isDark ? 'border-zinc-800' : 'border-zinc-200'}`}>
-                <span className={`text-xs uppercase tracking-widest font-black ${isDark ? 'text-zinc-400' : 'text-zinc-500'}`}>Total</span>
-                <span className="text-xl font-black text-blue-600">{formatRupiah(totalHarga)}</span>
+              <div className="flex justify-between items-center pt-4 border-t border-line">
+                <span className="mono-label-sm text-muted">Total</span>
+                <span className="text-xl font-black text-ink">{formatRupiah(totalHarga)}</span>
               </div>
             </div>
 
@@ -163,7 +163,7 @@ export default function PayClient() {
               <button 
                 onClick={tanganiTampilkanQRIS} 
                 disabled={isCheckingOut || totalHarga === 0}
-                className={`w-full py-4 rounded-xl font-black uppercase tracking-widest text-[10px] transition-all flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(37,99,235,0.2)] ${isCheckingOut || totalHarga === 0 ? 'bg-blue-800 text-blue-300 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-500 text-white'}`}
+                className={`w-full py-4 rounded-md font-black uppercase tracking-widest text-[10px] transition-all flex items-center justify-center gap-2 ${isCheckingOut || totalHarga === 0 ? 'bg-paper text-muted cursor-not-allowed' : 'bg-ink text-paper hover:bg-ink/85'}`}
               >
                 {isCheckingOut ? (
                   <>Membuat Kode QRIS... <span className="animate-spin w-4 h-4 border-2 border-current border-t-transparent rounded-full ml-2"></span></>
@@ -173,25 +173,25 @@ export default function PayClient() {
               </button>
             ) : (
               <div className="flex flex-col items-center animate-fade-in">
-                <p className={`text-[10px] uppercase tracking-widest font-bold mb-4 ${isDark ? 'text-zinc-500' : 'text-zinc-400'}`}>Scan untuk Membayar</p>
-                <div className="w-56 h-56 bg-white rounded-2xl mb-6 p-3 flex items-center justify-center overflow-hidden border-2 border-dashed border-blue-200 shadow-inner">
+                <p className="mono-label-sm text-muted mb-4">Scan untuk Membayar</p>
+                <div className="w-56 h-56 bg-white rounded-lg mb-6 p-3 flex items-center justify-center overflow-hidden border-2 border-dashed border-line shadow-inner">
                   {qrisData.url ? (
                     <img src={qrisData.url} alt="QRIS Barcode" className="w-full h-full object-contain" />
                   ) : qrisData.string ? (
                     <QRCodeSVG value={qrisData.string} size={200} level="H" includeMargin={true} />
                   ) : (
-                    <p className="text-xs text-zinc-400">QR Error</p>
+                    <p className="text-xs text-muted">QR Error</p>
                   )}
                 </div>
                 
-                <div className="w-full bg-zinc-900 text-white py-4 rounded-xl font-bold uppercase tracking-widest text-[10px] flex flex-col items-center justify-center gap-2 relative overflow-hidden">
-                  <div className="absolute inset-0 bg-blue-500/20 animate-pulse"></div>
+                <div className="w-full bg-ink text-paper py-4 rounded-md font-bold uppercase tracking-widest text-[10px] flex flex-col items-center justify-center gap-2 relative overflow-hidden">
+                  <div className="absolute inset-0 bg-paper/10 animate-pulse"></div>
                   <span className="relative flex items-center gap-2">
-                    <span className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+                    <span className="w-3 h-3 border-2 border-paper/30 border-t-paper rounded-full animate-spin"></span>
                     Menunggu Pembayaran...
                   </span>
                 </div>
-                <p className="text-[9px] text-zinc-500 italic mt-4 text-center">*Mohon selesaikan pembayaran. Layar akan otomatis dialihkan ke halaman unduhan jika sudah lunas.</p>
+                <p className="text-[9px] text-muted italic mt-4 text-center">*Mohon selesaikan pembayaran. Layar akan otomatis dialihkan ke halaman unduhan jika sudah lunas.</p>
               </div>
             )}
           </>

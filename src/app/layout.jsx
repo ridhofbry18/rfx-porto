@@ -1,28 +1,43 @@
 import Script from 'next/script'
-import { Inter, Outfit } from 'next/font/google'
+import localFont from 'next/font/local'
 import { DataProvider } from '@/components/DataProvider'
 import './globals.css'
 
-const inter = Inter({
-  subsets: ['latin'],
-  variable: '--font-inter',
+// Font self-hosted (OFL) — file woff2 di-commit di src/fonts, tanpa CDN runtime.
+const anton = localFont({
+  src: '../fonts/anton-latin-400-normal.woff2',
+  weight: '400',
+  variable: '--font-display',
   display: 'swap',
 })
 
-const outfit = Outfit({
-  subsets: ['latin'],
-  variable: '--font-outfit',
+const spaceGrotesk = localFont({
+  src: [
+    { path: '../fonts/space-grotesk-latin-400-normal.woff2', weight: '400' },
+    { path: '../fonts/space-grotesk-latin-500-normal.woff2', weight: '500' },
+    { path: '../fonts/space-grotesk-latin-700-normal.woff2', weight: '700' },
+  ],
+  variable: '--font-sans',
+  display: 'swap',
+})
+
+const spaceMono = localFont({
+  src: [
+    { path: '../fonts/space-mono-latin-400-normal.woff2', weight: '400' },
+    { path: '../fonts/space-mono-latin-700-normal.woff2', weight: '700' },
+  ],
+  variable: '--font-mono',
   display: 'swap',
 })
 
 export const metadata = {
   metadataBase: new URL('https://rfxvisual.my.id'),
   title: {
-    default: 'RFX Visual — Portfolio Ridho Febriyansyah | Visual Artist Malang',
+    default: 'RFX Visual — Ridho Febriyansyah | Visual Artist Malang',
     template: '%s | RFX Visual',
   },
-  description: 'Portfolio resmi RFX Visual oleh Muhammad Ridho Febriyansyah — Visual Artist, Videografer, dan Content Creator berbasis di Malang. Spesialis video sinematik, fotografi, animasi, dan desain kreatif.',
-  keywords: ['RFX Visual', 'Ridho Febriyansyah', 'Muhammad Ridho Febriyansyah', 'Visual Artist Malang', 'Videografer Malang', 'Sinematografi', 'Fotografer Malang', 'Editor Video', 'Wedding Video', 'Content Creator'],
+  description: 'Portfolio RFX Visual — Ridho Febriyansyah. Foto, video, dan karya visual lain, dibuat di Malang sejak 2020.',
+  keywords: ['RFX Visual', 'Ridho Febriyansyah', 'Visual Artist Malang', 'Videografer Malang', 'Fotografer Malang', 'Wedding Video', 'Content Creator'],
   authors: [{ name: 'Muhammad Ridho Febriyansyah' }],
   creator: 'Muhammad Ridho Febriyansyah',
   openGraph: {
@@ -30,8 +45,8 @@ export const metadata = {
     locale: 'id_ID',
     url: 'https://rfxvisual.my.id',
     siteName: 'RFX Visual',
-    title: 'RFX Visual — Portfolio Ridho Febriyansyah',
-    description: 'Portfolio resmi RFX Visual oleh Muhammad Ridho Febriyansyah — Visual Artist, Videografer, dan Content Creator.',
+    title: 'RFX Visual — Ridho Febriyansyah',
+    description: 'Foto, video, dan karya visual lain, dibuat di Malang sejak 2020.',
     images: [
       {
         url: '/logo.png',
@@ -43,8 +58,8 @@ export const metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'RFX Visual — Portfolio Ridho Febriyansyah',
-    description: 'Visual Artist & Videografer berbasis Malang. Karya video sinematik, fotografi, dan animasi.',
+    title: 'RFX Visual — Ridho Febriyansyah',
+    description: 'Foto, video, dan karya visual lain, dibuat di Malang sejak 2020.',
     images: ['/logo.png'],
   },
   robots: {
@@ -62,7 +77,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="id" className={`${inter.variable} ${outfit.variable}`}>
+    <html lang="id" className={`${anton.variable} ${spaceGrotesk.variable} ${spaceMono.variable}`}>
       <head>
         <script
           type="application/ld+json"
@@ -74,7 +89,7 @@ export default function RootLayout({ children }) {
               "alternateName": "RFX Visual",
               "url": "https://rfxvisual.my.id",
               "image": "https://rfxvisual.my.id/logo.png",
-              "description": "Visual Artist, Videografer, dan Content Creator berbasis di Malang. Berkarya sejak 2020 dengan identitas RFX Visual.",
+              "description": "Visual artist berbasis di Malang. Bikin foto dan video sejak 2020 dengan identitas RFX Visual.",
               "jobTitle": "Visual Artist & Videografer",
               "worksFor": {
                 "@type": "Organization",
@@ -92,13 +107,13 @@ export default function RootLayout({ children }) {
               ],
               "knowsAbout": [
                 "Videografi", "Fotografi", "Animasi", "Color Grading",
-                "Content Creation", "Adobe Premiere Pro", "After Effects", "Lightroom"
+                "Adobe Premiere Pro", "After Effects", "Lightroom"
               ]
             }),
           }}
         />
       </head>
-      <body className="font-sans antialiased">
+      <body className="antialiased">
         <DataProvider>
           {children}
         </DataProvider>

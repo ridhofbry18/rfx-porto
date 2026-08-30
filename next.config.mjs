@@ -11,6 +11,12 @@ const nextConfig = {
       { protocol: 'https', hostname: 'cdn-icons-png.flaticon.com' },
     ],
   },
+  async redirects() {
+    return [
+      // /portofolio pindah ke /works; ruang 3D pindah ke /myroom
+      { source: '/portofolio', destination: '/works', permanent: true },
+    ]
+  },
 }
 
 export default nextConfig

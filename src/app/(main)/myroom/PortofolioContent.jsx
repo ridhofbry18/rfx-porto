@@ -5,8 +5,6 @@ import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
 import { useData } from '@/components/DataProvider'
 import { getYoutubeEmbedUrl, getYoutubeId } from '@/utils/helpers'
 import { Play, ChevronRight, ChevronLeft, Globe, Film, Clapperboard, Camera, X } from 'lucide-react'
-import AnimatedText from '@/components/AnimatedText'
-import TransitionEffect from '@/components/TransitionEffect'
 
 // Only import Three if it's available (since we just installed it, dynamic import or standard import is fine, but Canvas must be client-side)
 import * as THREE from 'three'
@@ -25,11 +23,11 @@ const VideoModal = ({ isOpen, onClose, videoUrl, videoType }) => {
 
   return (
     <div className="fixed inset-0 z-[99999] flex items-center justify-center bg-black/95 backdrop-blur-md p-4 sm:p-8" onClick={onClose}>
-      <button onClick={onClose} className="absolute top-6 right-6 text-white hover:text-logo-red transition-colors z-[99999]">
+      <button onClick={onClose} className="absolute top-6 right-6 text-white hover:text-white/60 transition-colors z-[99999]">
         <X className="w-8 h-8" />
       </button>
       <div 
-        className={`${isShorts ? "w-full max-w-sm aspect-[9/16]" : "w-full max-w-5xl aspect-video"} rounded-2xl overflow-hidden bg-zinc-900 border border-white/10 shadow-[0_0_50px_rgba(232,69,77,0.3)] relative flex items-center justify-center`}
+        className={`${isShorts ? "w-full max-w-sm aspect-[9/16]" : "w-full max-w-5xl aspect-video"} rounded-2xl overflow-hidden bg-zinc-900 border border-white/10 shadow-[0_0_50px_rgba(255,255,255,0.12)] relative flex items-center justify-center`}
         onClick={e => e.stopPropagation()}
       >
         {isYoutube ? (
@@ -341,7 +339,7 @@ const CameraDeepDive = ({ data, subcategories, onClose }) => {
         {view === 'albums' ? (
            <div className="w-full h-full p-8 pt-16 flex flex-col pointer-events-auto overflow-y-auto">
              <div className="flex items-center gap-3 mb-8 ml-4">
-               <Camera className="w-6 h-6 text-logo-red" />
+               <Camera className="w-6 h-6 text-white" />
                <h2 className="text-2xl font-display font-black text-white uppercase tracking-widest">Select Folder</h2>
              </div>
              
@@ -451,7 +449,7 @@ const LaptopDeepDive = ({ animData, webData, onOpenVideo, onClose }) => {
           <svg className="w-4 h-4 hidden sm:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0"></path></svg>
           <svg className="w-4 h-4 hidden sm:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
           <span>{time}</span>
-          <button onClick={onClose} className="ml-2 px-3 py-1 bg-logo-red hover:bg-red-700 text-white rounded text-[10px] font-bold tracking-widest uppercase transition-colors shadow-sm flex items-center gap-1 border border-red-500/50">
+          <button onClick={onClose} className="ml-2 px-3 py-1 bg-black/60 hover:bg-black text-white rounded text-[10px] font-bold tracking-widest uppercase transition-colors flex items-center gap-1 border border-white/20">
             <X className="w-3 h-3" /> Exit
           </button>
         </div>
@@ -558,7 +556,7 @@ const LaptopDeepDive = ({ animData, webData, onOpenVideo, onClose }) => {
                         <h2 className="text-xl md:text-2xl font-bold text-black uppercase font-display">{web.title}</h2>
                         <p className="text-zinc-500 text-sm mt-1 line-clamp-2 max-w-lg">{web.description || 'Web Project'}</p>
                       </div>
-                      <div className="px-5 py-2 bg-black text-white rounded-full text-xs font-bold uppercase tracking-widest hover:bg-logo-red transition-colors shrink-0">
+                      <div className="px-5 py-2 bg-black text-white rounded-full text-xs font-bold uppercase tracking-widest hover:bg-white hover:text-black transition-colors shrink-0">
                         Visit Site
                       </div>
                     </div>
@@ -753,12 +751,12 @@ const RoomModel = ({ roomState, onHotspotClick }) => {
 // --- TUTORIAL TIMELINE ---
 // Anda dapat mengedit angka `start` dan `end` (dalam hitungan detik) jika teks kurang pas dengan suara.
 const TUTORIAL_STEPS = [
-  { start: 0, end: 2.5, en: "Welcome to RFXVisual Studio.", id: "Selamat datang di RFXVisual Studio.", target: "forward" },
-  { start: 2.5, end: 5.5, en: "Here you can view visual work by rfxvisual.", id: "Di sini Anda dapat melihat karya visual dari rfxvisual.", target: "forward" },
-  { start: 5.5, end: 8.5, en: "Tap the TV to view the videography work.", id: "Ketuk TV untuk melihat karya videografi.", target: "tv" },
-  { start: 8.5, end: 12.5, en: "Click the laptop to view the animation and website projects.", id: "Klik laptop untuk melihat proyek animasi dan website.", target: "laptop" },
+  { start: 0, end: 2.5, en: "Welcome to My Room.", id: "Selamat datang di My Room.", target: "forward" },
+  { start: 2.5, end: 5.5, en: "My work lives inside this room.", id: "Karya-karyaku tayang di ruangan ini.", target: "forward" },
+  { start: 5.5, end: 8.5, en: "Tap the TV to watch the videos.", id: "Ketuk TV untuk menonton video.", target: "tv" },
+  { start: 8.5, end: 12.5, en: "Click the laptop for animation and web projects.", id: "Klik laptop untuk animasi dan proyek web.", target: "laptop" },
   { start: 12.5, end: 14.5, en: "Tilt your head down slightly,", id: "Tundukkan kepala Anda sedikit,", target: "camera" },
-  { start: 14.5, end: 17.5, en: "then press the camera to view the photo.", id: "lalu tekan kamera untuk melihat foto.", target: "camera" },
+  { start: 14.5, end: 17.5, en: "then press the camera to browse the photos.", id: "lalu tekan kamera untuk melihat foto-foto.", target: "camera" },
 ];
 
 // --- MAIN PORTFOLIO COMPONENT ---
@@ -885,7 +883,7 @@ const PortofolioContent = () => {
   return (
     <>
       <VideoModal isOpen={modalVideo.isOpen} onClose={() => setModalVideo({ ...modalVideo, isOpen: false })} videoUrl={modalVideo.url} videoType={modalVideo.type} />
-      <TransitionEffect />
+
       
       {/* White Flash Motion Blur Transition */}
       <AnimatePresence>
@@ -914,7 +912,7 @@ const PortofolioContent = () => {
               : 'top-6 left-6 md:top-8 md:left-8 text-left scale-50 md:scale-50 origin-top-left drop-shadow-lg'
           }`}
         >
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-display font-black uppercase tracking-widest text-white drop-shadow-[0_0_20px_rgba(255,255,255,0.3)]">MY STUDIO</h1>
+          <h1 className="text-5xl md:text-7xl lg:text-8xl font-display font-black uppercase tracking-widest text-white drop-shadow-[0_0_20px_rgba(255,255,255,0.3)]">MY ROOM</h1>
           
           <AnimatePresence>
             {roomState === 'intro' && (
@@ -925,19 +923,19 @@ const PortofolioContent = () => {
                 className="pointer-events-auto"
               >
                 <p className="text-zinc-400 uppercase tracking-[0.3em] text-sm md:text-base mt-4 font-bold max-w-xl mb-12">
-                  Click below to enter the creative space
+                  Ruang pamer 3D — TV, kamera, dan laptop di dalamnya bisa diklik. Butuh WebGL.
                 </p>
                 {progress >= 99.9 ? (
                   <button 
                     onClick={startTutorial}
                     className="px-8 py-3 bg-white text-black font-bold uppercase tracking-widest rounded-full hover:scale-105 transition-transform shadow-[0_0_20px_rgba(255,255,255,0.2)]"
                   >
-                    Enter to the Room
+                    Masuk
                   </button>
                 ) : (
                   <div className="flex flex-col items-center gap-4 mt-8">
                     <div className="w-48 h-1.5 bg-white/10 rounded-full overflow-hidden shadow-inner">
-                      <div className="h-full bg-logo-red transition-all duration-300" style={{ width: `${progress}%` }} />
+                      <div className="h-full bg-white transition-all duration-300" style={{ width: `${progress}%` }} />
                     </div>
                     <p className="text-zinc-500 text-[10px] font-mono font-bold tracking-[0.3em] uppercase animate-pulse">
                       LOADING ASSETS... {Math.round(progress)}%
@@ -960,7 +958,7 @@ const PortofolioContent = () => {
               className="absolute inset-0 flex flex-col items-center justify-center text-center z-40 bg-black"
             >
               <h2 className="text-2xl md:text-4xl font-display uppercase tracking-widest text-white">
-                Thank you for visiting my creative studio.
+                Sampai jumpa di ruang berikutnya.
               </h2>
             </motion.div>
           )}
@@ -1015,7 +1013,7 @@ const PortofolioContent = () => {
                     setTimeout(() => setRoomState('intro'), 2500); // Reset to intro after exit msg
                   }, 300);
                 }}
-                className="flex items-center justify-center px-8 py-2.5 bg-logo-red text-white font-bold uppercase tracking-widest text-xs rounded-full hover:bg-red-700 transition-colors shadow-[0_0_15px_rgba(232,69,77,0.5)] pointer-events-auto"
+                className="flex items-center justify-center px-8 py-2.5 bg-white text-black font-bold uppercase tracking-widest text-xs rounded-full hover:bg-white/85 transition-colors shadow-[0_0_15px_rgba(255,255,255,0.25)] pointer-events-auto"
               >
                 <span className="pl-[0.1em]">Exit Room</span>
               </button>
@@ -1049,12 +1047,12 @@ const PortofolioContent = () => {
         </AnimatePresence>
 
         {/* Hidden Audio Elements */}
-        <audio ref={audioRef} src="/speechpetunjuk.mp3" preload="auto" />
-        <audio ref={bgmRef} src="/backsound.mp3" preload="auto" loop />
-        <audio ref={clickSfxRef} src="/click_effect.mp3" preload="auto" />
-        <audio ref={whooshShortRef} src="/whoosh_short.mp3" preload="auto" />
-        <audio ref={whooshLongRef} src="/whoosh_long.mp3" preload="auto" />
-        <audio ref={vhsRef} src="/vhs_noise.mp3" preload="auto" loop />
+        <audio ref={audioRef} src="/speechpetunjuk.mp3" preload="none" />
+        <audio ref={bgmRef} src="/backsound.mp3" preload="none" loop />
+        <audio ref={clickSfxRef} src="/click_effect.mp3" preload="none" />
+        <audio ref={whooshShortRef} src="/whoosh_short.mp3" preload="none" />
+        <audio ref={whooshLongRef} src="/whoosh_long.mp3" preload="none" />
+        <audio ref={vhsRef} src="/vhs_noise.mp3" preload="none" loop />
       </main>
 
       {/* 3. The Modals (Deep Dives) */}

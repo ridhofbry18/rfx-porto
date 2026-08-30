@@ -69,7 +69,7 @@ const IGLayout = ({ instagramConfig, setInstagramConfig, handleSimpanInstagram }
                   <input
                     type="text"
                     placeholder="rfx.visual"
-                    className="w-full bg-black/50 border border-white/10 rounded-2xl px-5 py-3 text-white text-sm hover:border-white/20 focus:border-logo-red/50 focus:outline-none transition-colors"
+                    className="w-full bg-black/50 border border-white/10 rounded-2xl px-5 py-3 text-white text-sm hover:border-white/20 focus:border-white/50 focus:outline-none transition-colors"
                     value={instagramConfig.igUsername || ''}
                     onChange={e => setInstagramConfig({ ...instagramConfig, igUsername: e.target.value })}
                   />
@@ -80,7 +80,7 @@ const IGLayout = ({ instagramConfig, setInstagramConfig, handleSimpanInstagram }
                   <textarea
                     placeholder="Jadikan feed Instagram sebagai tampilan portofolio visual..."
                     rows="3"
-                    className="w-full bg-black/50 border border-white/10 rounded-2xl px-5 py-3 text-white text-sm hover:border-white/20 focus:border-logo-red/50 focus:outline-none transition-colors resize-none"
+                    className="w-full bg-black/50 border border-white/10 rounded-2xl px-5 py-3 text-white text-sm hover:border-white/20 focus:border-white/50 focus:outline-none transition-colors resize-none"
                     value={instagramConfig.igBio || ''}
                     onChange={e => setInstagramConfig({ ...instagramConfig, igBio: e.target.value })}
                   />
@@ -96,7 +96,7 @@ const IGLayout = ({ instagramConfig, setInstagramConfig, handleSimpanInstagram }
                         <div className="text-[11px] text-zinc-500 text-center px-2">Belum ada gambar</div>
                       )}
                     </div>
-                    <label className="flex-1 px-6 py-4 rounded-2xl bg-logo-red/20 border border-logo-red/40 text-center cursor-pointer hover:bg-logo-red/30 transition-colors">
+                    <label className="flex-1 px-6 py-4 rounded-2xl bg-white/20 border border-white/40 text-center cursor-pointer hover:bg-white/30 transition-colors">
                       <div className="flex items-center justify-center gap-2 text-sm font-bold uppercase tracking-wider">
                         <Upload className="w-4 h-4" />
                         Upload Foto
@@ -123,7 +123,7 @@ const IGLayout = ({ instagramConfig, setInstagramConfig, handleSimpanInstagram }
                     if (ok) { setSaveStatus('saved'); setSavedAt(new Date().toISOString()); setTimeout(() => setSaveStatus('idle'), 3000); }
                     else setSaveStatus('error');
                   }}
-                  className="w-full mt-6 px-6 py-4 rounded-2xl bg-white text-black font-bold uppercase tracking-wider text-sm hover:bg-logo-red hover:text-white transition-all"
+                  className="w-full mt-6 px-6 py-4 rounded-2xl bg-white text-black font-bold uppercase tracking-wider text-sm hover:bg-white hover:text-white transition-all"
                 >
                   Simpan Profile
                 </button>
@@ -193,7 +193,7 @@ const IGLayout = ({ instagramConfig, setInstagramConfig, handleSimpanInstagram }
             {posts.map((url, idx) => (
               <div key={idx} className="space-y-2">
                 <div className="flex items-center gap-2">
-                  <div className="w-9 h-9 rounded-lg bg-logo-red/20 border border-logo-red/40 flex items-center justify-center text-[10px] font-black text-logo-red">
+                  <div className="w-9 h-9 rounded-lg bg-white/20 border border-white/40 flex items-center justify-center text-[10px] font-black text-white">
                     {idx + 1}
                   </div>
                   <span className="text-xs uppercase tracking-[0.2em] text-zinc-500">Slot {idx + 1}</span>
@@ -202,7 +202,7 @@ const IGLayout = ({ instagramConfig, setInstagramConfig, handleSimpanInstagram }
                   <input
                     type="url"
                     placeholder={`https://image-source.com/img-${idx + 1}.jpg`}
-                    className="w-full bg-black/50 border border-white/10 rounded-2xl px-4 py-3 text-white text-xs hover:border-white/20 focus:border-logo-red/50 focus:outline-none transition-colors"
+                    className="w-full bg-black/50 border border-white/10 rounded-2xl px-4 py-3 text-white text-xs hover:border-white/20 focus:border-white/50 focus:outline-none transition-colors"
                     value={url}
                     onChange={e => updatePost(idx, e.target.value)}
                   />
@@ -222,7 +222,7 @@ const IGLayout = ({ instagramConfig, setInstagramConfig, handleSimpanInstagram }
 
             <button
                 onClick={handleSimpanInstagram}
-            className="w-full mt-4 px-6 py-4 rounded-2xl bg-white text-black font-black uppercase tracking-wider text-sm hover:bg-logo-red hover:text-white transition-all shadow-lg"
+            className="w-full mt-4 px-6 py-4 rounded-2xl bg-white text-black font-black uppercase tracking-wider text-sm hover:bg-white hover:text-white transition-all shadow-lg"
           >
             Simpan Grid Instagram
           </button>

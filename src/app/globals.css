@@ -2,45 +2,124 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ============================================================
+   RFX Visual — Editorial Studio (monokrom)
+   Satu sumber warna: kertas & tinta. "Aksen" = inversi.
+   Warna yang benar-benar berwarna hanya datang dari karya.
+   ============================================================ */
+
 :root {
-  background-color: #943838;
-  color: #ffffff;
+  /* light (default) */
+  --paper: 245 243 238;   /* #F5F3EE kertas hangat */
+  --paper-2: 235 232 225; /* #EBE8E1 permukaan halus */
+  --ink: 20 18 15;        /* #14120F tinta */
+  --muted: 120 114 106;   /* #78726A sekunder */
+
+  --font-body: var(--font-sans), 'Space Grotesk', system-ui, sans-serif;
+  --font-head: var(--font-display), 'Anton', 'Arial Narrow', sans-serif;
+  --font-mono-stack: var(--font-mono), 'Space Mono', ui-monospace, monospace;
+
+  background-color: rgb(var(--paper));
+  color: rgb(var(--ink));
+}
+
+/* scope statis (tanpa JS) untuk halaman gelap: /works, /myroom, dll. */
+.theme-dark {
+  --paper: 16 15 13;
+  --paper-2: 26 24 21;
+  --ink: 241 238 231;
+  --muted: 146 140 131;
+  background-color: rgb(var(--paper));
+  color: rgb(var(--ink));
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: rgb(var(--ink));
+  color: rgb(var(--paper));
+}
+
+:focus-visible {
+  outline: 2px solid rgb(var(--ink));
+  outline-offset: 3px;
 }
 
 @layer base {
   h1, h2, h3 {
-    font-family: var(--font-outfit), 'Outfit', sans-serif;
-    font-weight: 900;
-    text-transform: uppercase;
-    letter-spacing: -0.025em;
+    font-family: var(--font-head);
+    font-weight: 400; /* Anton hanya 400; beratnya dari fontnya */
+    letter-spacing: 0.01em;
+    line-height: 0.92;
   }
   h4, h5, h6 {
-    font-family: var(--font-outfit), 'Outfit', sans-serif;
+    font-family: var(--font-body);
     font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: -0.025em;
   }
 }
 
-.text-outline-white {
-  text-shadow: 0 0 1px rgba(255,255,255,0.9), 0 0 4px rgba(255,255,255,0.35);
+@layer utilities {
+  /* label metadata: mono, uppercase, tracking lebar */
+  .mono-label {
+    font-family: var(--font-mono-stack);
+    font-size: 0.6875rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    font-weight: 400;
+  }
+  .mono-label-sm {
+    font-family: var(--font-mono-stack);
+    font-size: 0.625rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+  /* garis pemisah tegas khas editorial */
+  .rule-2 { border-bottom: 2px solid rgb(var(--ink)); }
+  .rule-1 { border-bottom: 1px solid rgb(var(--line)); }
+
+  /* tautan teks dengan underline tegas (pengganti tombol norak) */
+  .link-underline {
+    text-decoration: underline;
+    text-decoration-thickness: 1.5px;
+    text-underline-offset: 4px;
+    transition: opacity .2s ease;
+  }
+  .link-underline:hover { opacity: 0.6; }
+
+  /* karya: grayscale saat diam, warna saat disentuh */
+  .work-img {
+    filter: grayscale(1) contrast(1.04);
+    transition: filter .5s ease, transform .7s cubic-bezier(.2,.8,.2,1);
+  }
+  .group:hover .work-img,
+  .work-img:hover {
+    filter: grayscale(0) contrast(1);
+    transform: scale(1.02);
+  }
 }
 
-.text-outline-black {
-  text-shadow: 0 0 1px rgba(0,0,0,0.9), 0 0 4px rgba(0,0,0,0.35);
-}
-
-/* Custom Scrollbar */
-.custom-scrollbar::-webkit-scrollbar {
-  width: 6px;
-}
-.custom-scrollbar::-webkit-scrollbar-track {
-  background: transparent;
-}
+/* scrollbar minimal */
+.custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+.custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background-color: #3f3f46;
-  border-radius: 10px;
+  background-color: rgb(var(--muted) / .5);
+  border-radius: 999px;
 }
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background-color: #dc2626; /* red-600 */
+
+/* hormati preferensi gerak minimal */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

@@ -7,18 +7,18 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['var(--font-inter)', 'Inter', 'sans-serif'],
-        display: ['var(--font-outfit)', '"Outfit"', 'sans-serif'],
+        sans: ['var(--font-sans)', 'Space Grotesk', 'system-ui', 'sans-serif'],
+        display: ['var(--font-display)', 'Anton', 'Arial Narrow', 'sans-serif'],
+        mono: ['var(--font-mono)', 'Space Mono', 'ui-monospace', 'monospace'],
       },
       colors: {
-        'logo-red': '#9B2E33',
-        'logo-red-light': '#C45B62',
-        'logo-red-dark': '#7A1E22',
-        'logo-red-glow': 'rgba(155,46,51,0.2)',
+        // token monokrom — satu sumber kebenaran, tanpa hex di komponen
+        paper: 'rgb(var(--paper) / <alpha-value>)',
+        'paper-2': 'rgb(var(--paper-2) / <alpha-value>)',
+        ink: 'rgb(var(--ink) / <alpha-value>)',
+        muted: 'rgb(var(--muted) / <alpha-value>)',
+        line: 'rgb(var(--ink) / 0.16)',
       },
-      animation: {
-        'spin-slow': 'spin 8s linear infinite',
-      }
     },
   },
   plugins: [],

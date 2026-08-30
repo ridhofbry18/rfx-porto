@@ -44,18 +44,18 @@ const TemplatesContent = () => {
   };
 
   return (
-    <div className={`min-h-screen font-sans py-16 px-6 relative overflow-x-hidden transition-colors duration-500 ${isDark ? 'bg-zinc-950 text-white' : 'bg-[#f4fcf4] text-zinc-900'}`}>
+    <div className={`min-h-screen font-sans py-16 px-6 relative overflow-x-hidden transition-colors duration-500 bg-paper text-ink ${isDark ? 'theme-dark' : ''}`}>
       <div className="max-w-6xl mx-auto">
         <div className="flex justify-between items-center mb-10">
-          <button onClick={() => router.push('/')} className={`text-[10px] uppercase tracking-widest font-bold flex items-center gap-2 transition-colors ${isDark ? 'text-zinc-500 hover:text-white' : 'text-zinc-500 hover:text-zinc-900'}`}>
+          <button onClick={() => router.push('/')} className="mono-label-sm text-muted hover:text-ink flex items-center gap-2 transition-colors">
             <ChevronLeft className="w-3 h-3" /> Kembali ke Bio
           </button>
           
-          <button onClick={() => setIsCartOpen(true)} className={`relative flex items-center gap-2 px-4 py-2 rounded-full transition-all border ${isDark ? 'bg-blue-600/10 hover:bg-blue-600/20 text-blue-400 border-blue-500/20' : 'bg-blue-50 hover:bg-blue-100 text-blue-600 border-blue-200'}`}>
+          <button onClick={() => setIsCartOpen(true)} className="relative flex items-center gap-2 px-4 py-2 rounded-full transition-all border border-ink text-ink hover:bg-ink hover:text-paper">
             <ShoppingCart className="w-4 h-4" />
             <span className="text-[10px] font-bold uppercase tracking-widest">Keranjang</span>
             {cart.length > 0 && (
-              <span className="absolute -top-1 -right-1 bg-red-600 text-white text-[10px] font-black w-5 h-5 flex items-center justify-center rounded-full shadow-lg shadow-red-900/50">
+              <span className="absolute -top-1 -right-1 bg-ink text-paper text-[10px] font-black w-5 h-5 flex items-center justify-center rounded-full shadow-lg">
                 {cart.length}
               </span>
             )}
@@ -63,53 +63,53 @@ const TemplatesContent = () => {
         </div>
 
         <div className="mb-12 text-center">
-          <h2 className="text-4xl md:text-5xl font-black uppercase mb-4 tracking-tighter">Katalog Template<span className="text-blue-500">.</span></h2>
-          <p className={`text-sm font-light max-w-xl mx-auto leading-relaxed ${isDark ? 'text-zinc-400' : 'text-zinc-600'}`}>Pilih dan kumpulkan template website premium favorit Anda. Anda bisa memborong lebih dari satu template sekaligus melalui keranjang belanja.</p>
+          <h2 className="text-4xl md:text-5xl font-display uppercase mb-4 tracking-tighter">Katalog Template<span className="text-ink">.</span></h2>
+          <p className="text-sm font-light max-w-xl mx-auto leading-relaxed text-muted">Pilih dan kumpulkan template website premium favorit Anda. Anda bisa memborong lebih dari satu template sekaligus melalui keranjang belanja.</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
           {daftarKatalog && daftarKatalog.length === 0 ? (
-            <div className={`col-span-full rounded-[2rem] border p-10 text-center ${isDark ? 'bg-zinc-900/40 border-white/10' : 'bg-white border-zinc-200'}`}>
-              <p className={`text-sm ${isDark ? 'text-zinc-400' : 'text-zinc-500'}`}>Belum ada katalog template. Tambahkan data melalui Admin Panel &gt; Website.</p>
+            <div className="col-span-full rounded-lg border p-10 text-center bg-paper-2 border-line">
+              <p className="text-sm text-muted">Belum ada katalog template. Tambahkan data melalui Admin Panel &gt; Website.</p>
             </div>
           ) : daftarKatalog?.map(tpl => {
             const inCart = cart.some(item => item.id === tpl.id);
             return (
-              <div key={tpl.id} className={`border rounded-[2rem] overflow-hidden transition-all flex flex-col group shadow-sm hover:shadow-xl ${isDark ? (inCart ? 'bg-zinc-900/40 border-blue-500/50 shadow-[0_0_20px_rgba(37,99,235,0.1)]' : 'bg-zinc-900/40 border-white/5 hover:border-white/15') : (inCart ? 'bg-blue-50/50 border-blue-400 shadow-[0_0_15px_rgba(37,99,235,0.1)]' : 'bg-white border-zinc-200 hover:border-zinc-300')}`}>
-                <div className="aspect-[4/3] bg-zinc-800 relative overflow-hidden">
-                  <img src={tpl.image} alt={tpl.title} className={`w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ${isDark ? 'opacity-80' : 'opacity-100'}`} />
-                  <div className={`absolute inset-0 ${isDark ? 'bg-gradient-to-t from-zinc-950 via-zinc-900/40 to-transparent' : 'bg-gradient-to-t from-black/80 via-black/20 to-transparent'}`}></div>
+              <div key={tpl.id} className={`border rounded-lg overflow-hidden transition-all flex flex-col group shadow-sm hover:shadow-lg ${inCart ? 'bg-paper-2 border-ink' : 'bg-paper-2 border-line hover:border-ink'}`}>
+                <div className="aspect-[4/3] bg-paper-2 relative overflow-hidden">
+                  <img src={tpl.image} alt={tpl.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
                   <div className="absolute bottom-6 left-6 right-6">
-                    <span className="inline-block bg-blue-600 text-white px-2 py-0.5 rounded text-[8px] font-bold tracking-widest uppercase shadow-lg mb-2">{tpl.badge}</span>
-                    <h3 className="text-xl font-black uppercase tracking-wide leading-tight text-white">{tpl.title}</h3>
+                    <span className="inline-block bg-ink text-paper px-2 py-0.5 rounded text-[8px] font-bold tracking-widest uppercase shadow-lg mb-2">{tpl.badge}</span>
+                    <h3 className="text-xl font-display uppercase tracking-wide leading-tight text-white">{tpl.title}</h3>
                   </div>
                 </div>
 
-                <div className={`p-6 flex-1 flex flex-col ${isDark ? 'bg-zinc-950' : 'bg-transparent'}`}>
-                  <p className={`text-[11px] font-light leading-relaxed mb-6 line-clamp-2 ${isDark ? 'text-zinc-400' : 'text-zinc-600'}`}>{tpl.description}</p>
+                <div className="p-6 flex-1 flex flex-col">
+                  <p className="text-[11px] font-light leading-relaxed mb-6 line-clamp-2 text-muted">{tpl.description}</p>
                   
                   <div className="space-y-2 mb-6 flex-1">
                     {tpl.features.slice(0, 3).map((feat, i) => (
-                      <div key={i} className={`flex items-center gap-2 text-[10px] ${isDark ? 'text-zinc-400' : 'text-zinc-600'}`}>
-                        <CheckCircle2 className="w-3 h-3 text-blue-500/70" />
+                      <div key={i} className="flex items-center gap-2 text-[10px] text-muted">
+                        <CheckCircle2 className="w-3 h-3 text-ink" />
                         <span className="line-clamp-1">{feat}</span>
                       </div>
                     ))}
-                    {tpl.features.length > 3 && <div className={`text-[9px] italic pl-5 ${isDark ? 'text-zinc-600' : 'text-zinc-400'}`}>+ {tpl.features.length - 3} fitur lainnya</div>}
+                    {tpl.features.length > 3 && <div className="text-[9px] italic pl-5 text-muted">+ {tpl.features.length - 3} fitur lainnya</div>}
                   </div>
 
-                  <div className={`flex items-center justify-between pt-4 border-t ${isDark ? 'border-white/5' : 'border-zinc-200'}`}>
+                  <div className="flex items-center justify-between pt-4 border-t border-line">
                     <span className="text-lg font-black">{tpl.priceStr}</span>
                     <div className="flex gap-2">
                       <button 
                         onClick={() => router.push(tpl.demoUrl)}
-                        className={`px-4 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all ${isDark ? 'bg-zinc-800 text-zinc-300 hover:text-white hover:bg-zinc-700' : 'bg-zinc-100 text-zinc-600 hover:text-black hover:bg-zinc-200'}`}
+                        className="px-4 py-2 rounded-md border border-ink text-ink hover:bg-ink hover:text-paper text-[10px] font-bold uppercase tracking-widest transition-all"
                       >
                         Preview
                       </button>
                       <button 
                         onClick={() => inCart ? tanganiHapusKeranjang(tpl.id) : tanganiTambahKeranjang(tpl)}
-                        className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all ${inCart ? (isDark ? 'bg-red-600/10 text-red-500 hover:bg-red-600/20' : 'bg-red-50 text-red-600 hover:bg-red-100 border border-red-200') : (isDark ? 'bg-white text-black hover:bg-zinc-200' : 'bg-blue-600 text-white hover:bg-blue-700')}`}
+                        className={`flex items-center gap-1.5 px-4 py-2 rounded-md text-[10px] font-bold uppercase tracking-widest transition-all ${inCart ? 'border border-ink text-ink hover:bg-ink hover:text-paper' : 'bg-ink text-paper hover:bg-ink/85'}`}
                       >
                         {inCart ? (
                           <><Minus className="w-3 h-3" /> Batal</>
@@ -130,13 +130,13 @@ const TemplatesContent = () => {
       {isCartOpen && (
         <>
           <div className="fixed inset-0 z-[100] bg-black/60 backdrop-blur-sm" onClick={() => setIsCartOpen(false)}></div>
-          <div className={`fixed top-0 right-0 bottom-0 w-full sm:w-[400px] border-l z-[110] shadow-2xl flex flex-col animate-slide-in-right ${isDark ? 'bg-zinc-950 border-zinc-800' : 'bg-white border-zinc-200'}`}>
-            <div className={`p-6 border-b flex justify-between items-center ${isDark ? 'border-white/10 bg-zinc-900/50' : 'border-zinc-100 bg-zinc-50'}`}>
+          <div className="fixed top-0 right-0 bottom-0 w-full sm:w-[400px] border-l z-[110] shadow-2xl flex flex-col animate-slide-in-right bg-paper border-line">
+            <div className="p-6 border-b flex justify-between items-center border-line bg-paper-2">
               <div className="flex items-center gap-3">
-                <ShoppingCart className="w-5 h-5 text-blue-500" />
-                <h3 className={`text-sm font-black uppercase tracking-widest ${isDark ? 'text-white' : 'text-zinc-900'}`}>Keranjang Anda</h3>
+                <ShoppingCart className="w-5 h-5 text-ink" />
+                <h3 className="text-sm font-display uppercase tracking-widest text-ink">Keranjang Anda</h3>
               </div>
-              <button onClick={() => setIsCartOpen(false)} className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors ${isDark ? 'bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-white' : 'bg-zinc-200 hover:bg-zinc-300 text-zinc-500 hover:text-zinc-800'}`}>
+              <button onClick={() => setIsCartOpen(false)} className="w-8 h-8 rounded-full flex items-center justify-center transition-colors bg-paper-2 text-muted hover:bg-ink hover:text-paper">
                 <X className="w-4 h-4" />
               </button>
             </div>
@@ -144,19 +144,19 @@ const TemplatesContent = () => {
             <div className="flex-1 overflow-y-auto p-6 space-y-4 custom-scrollbar">
               {cart.length === 0 ? (
                 <div className="h-full flex flex-col items-center justify-center text-center opacity-50">
-                  <ShoppingCart className={`w-16 h-16 mb-4 ${isDark ? 'text-zinc-600' : 'text-zinc-400'}`} />
-                  <p className={`text-xs uppercase tracking-widest font-bold ${isDark ? 'text-zinc-400' : 'text-zinc-500'}`}>Keranjang Kosong</p>
-                  <p className={`text-[10px] mt-2 ${isDark ? 'text-zinc-500' : 'text-zinc-400'}`}>Pilih template dari katalog untuk menambahkan ke sini.</p>
+                  <ShoppingCart className="w-16 h-16 mb-4 text-muted" />
+                  <p className="mono-label text-muted">Keranjang Kosong</p>
+                  <p className="text-[10px] mt-2 text-muted">Pilih template dari katalog untuk menambahkan ke sini.</p>
                 </div>
               ) : (
                 cart.map(item => (
-                  <div key={item.id} className={`border rounded-2xl p-4 flex gap-4 relative pr-10 shadow-sm ${isDark ? 'bg-zinc-900/50 border-white/5' : 'bg-white border-zinc-200'}`}>
-                    <img src={item.image} alt={item.title} className="w-16 h-16 rounded-xl object-cover opacity-80" />
+                  <div key={item.id} className="border rounded-lg p-4 flex gap-4 relative pr-10 shadow-sm bg-paper-2 border-line">
+                    <img src={item.image} alt={item.title} className="w-16 h-16 rounded-lg object-cover" />
                     <div className="flex flex-col justify-center">
-                      <h4 className={`text-xs font-bold uppercase tracking-wider mb-1 line-clamp-1 ${isDark ? 'text-white' : 'text-zinc-800'}`}>{item.title}</h4>
-                      <p className="text-[10px] font-bold text-blue-500">{item.priceStr}</p>
+                      <h4 className="text-xs font-bold uppercase tracking-wider mb-1 line-clamp-1 text-ink">{item.title}</h4>
+                      <p className="text-[10px] font-bold text-ink">{item.priceStr}</p>
                     </div>
-                    <button onClick={() => tanganiHapusKeranjang(item.id)} className={`absolute top-1/2 -translate-y-1/2 right-4 transition-colors ${isDark ? 'text-zinc-500 hover:text-red-500' : 'text-zinc-400 hover:text-red-500'}`}>
+                    <button onClick={() => tanganiHapusKeranjang(item.id)} className="absolute top-1/2 -translate-y-1/2 right-4 transition-colors text-muted hover:text-ink">
                       <X className="w-4 h-4" />
                     </button>
                   </div>
@@ -165,18 +165,18 @@ const TemplatesContent = () => {
             </div>
 
             {cart.length > 0 && (
-              <div className={`p-6 border-t ${isDark ? 'bg-zinc-900/80 border-white/10' : 'bg-zinc-50 border-zinc-200'}`}>
+              <div className="p-6 border-t bg-paper-2 border-line">
                 <div className="flex justify-between items-end mb-6">
-                  <span className={`text-[10px] uppercase tracking-widest font-bold ${isDark ? 'text-zinc-400' : 'text-zinc-500'}`}>Total Pembayaran</span>
-                  <span className={`text-2xl font-black ${isDark ? 'text-white' : 'text-zinc-900'}`}>{formatRupiah(totalHarga)}</span>
+                  <span className="mono-label-sm text-muted">Total Pembayaran</span>
+                  <span className="text-2xl font-black text-ink">{formatRupiah(totalHarga)}</span>
                 </div>
                 <button 
                   onClick={tanganiCheckoutPakasir} 
-                  className={`w-full py-4 rounded-xl font-black uppercase tracking-widest text-[10px] transition-all flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(37,99,235,0.2)] bg-blue-600 hover:bg-blue-500 text-white`}
+                  className="w-full py-4 rounded-md font-black uppercase tracking-widest text-[10px] transition-all flex items-center justify-center gap-2 bg-ink text-paper hover:bg-ink/85"
                 >
                   Dapatkan Kode Pembayaran <ArrowRight className="w-4 h-4" />
                 </button>
-                <p className="text-[9px] text-center text-zinc-500 italic mt-4">*Sistem akan memberikan Kode khusus agar sesi pembayaran Anda aman & tidak hilang.</p>
+                <p className="text-[9px] text-center text-muted italic mt-4">*Sistem akan memberikan Kode khusus agar sesi pembayaran Anda aman & tidak hilang.</p>
               </div>
             )}
           </div>
@@ -186,23 +186,23 @@ const TemplatesContent = () => {
       {/* Modal Peringatan In-App Browser (Kode Pembayaran) */}
       {paymentCodeData && (
         <div className="fixed inset-0 z-[200] bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl p-8 max-w-sm w-full flex flex-col items-center text-center animate-slide-in-right shadow-[0_0_50px_rgba(37,99,235,0.2)] relative">
-            <button onClick={() => setPaymentCodeData(null)} className="absolute top-4 right-4 w-8 h-8 rounded-full bg-zinc-100 flex items-center justify-center text-zinc-500 hover:text-red-500 transition-colors">
+          <div className="bg-paper rounded-lg p-8 max-w-sm w-full flex flex-col items-center text-center animate-slide-in-right shadow-2xl relative">
+            <button onClick={() => setPaymentCodeData(null)} className="absolute top-4 right-4 w-8 h-8 rounded-full bg-paper-2 flex items-center justify-center text-muted hover:text-ink transition-colors">
               <X className="w-4 h-4" />
             </button>
             
-            <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-6">
-              <ShoppingCart className="w-8 h-8 text-blue-600" />
+            <div className="w-16 h-16 bg-paper-2 rounded-full flex items-center justify-center mb-6">
+              <ShoppingCart className="w-8 h-8 text-ink" />
             </div>
             
-            <h3 className="text-xl font-black uppercase text-black mb-2">Simpan Kode Pesanan</h3>
-            <p className="text-xs text-zinc-500 mb-6 font-medium leading-relaxed">
+            <h3 className="text-xl font-display uppercase text-ink mb-2">Simpan Kode Pesanan</h3>
+            <p className="text-xs text-muted mb-6 font-medium leading-relaxed">
               Untuk menghindari resiko tertutupnya halaman saat Anda membuka aplikasi m-Banking, <b>tolong salin link di bawah ini dan buka di browser utama Anda (Safari / Chrome).</b>
             </p>
             
-            <div className="w-full bg-zinc-50 rounded-xl mb-6 p-4 border-2 border-dashed border-zinc-200 text-left relative group">
-               <p className="text-[9px] uppercase tracking-widest text-zinc-400 font-bold mb-1">Kode Pembayaran:</p>
-               <p className="font-mono text-sm font-bold text-black break-all">{paymentCodeData.code}</p>
+            <div className="w-full bg-paper-2 rounded-lg mb-6 p-4 border-2 border-dashed border-line text-left relative group">
+               <p className="mono-label-sm text-muted mb-1">Kode Pembayaran:</p>
+               <p className="font-mono text-sm font-bold text-ink break-all">{paymentCodeData.code}</p>
             </div>
             
             <button 
@@ -210,7 +210,7 @@ const TemplatesContent = () => {
                 navigator.clipboard.writeText(paymentCodeData.url);
                 alert("Link berhasil disalin! Silakan buka Safari/Chrome dan tempel (paste) link tersebut.");
               }} 
-              className="w-full bg-blue-600 hover:bg-blue-500 text-white py-4 rounded-xl font-bold uppercase tracking-widest text-[10px] flex items-center justify-center gap-2 transition-all mb-3"
+              className="w-full bg-ink text-paper hover:bg-ink/85 py-4 rounded-md font-bold uppercase tracking-widest text-[10px] flex items-center justify-center gap-2 transition-all mb-3"
             >
               Salin Link Pembayaran
             </button>
@@ -219,12 +219,12 @@ const TemplatesContent = () => {
               onClick={() => {
                 window.open(paymentCodeData.url, '_blank');
               }} 
-              className="w-full bg-zinc-100 hover:bg-zinc-200 text-zinc-900 py-4 rounded-xl font-bold uppercase tracking-widest text-[10px] flex items-center justify-center gap-2 transition-all"
+              className="w-full bg-paper-2 text-ink hover:bg-ink hover:text-paper py-4 rounded-md font-bold uppercase tracking-widest text-[10px] flex items-center justify-center gap-2 transition-all"
             >
               Buka di Tab Baru
             </button>
             
-            <p className="text-[9px] text-zinc-400 italic mt-6 text-center">*Sistem gerbang pembayaran akan meminta scan QRIS setelah Anda membuka link tersebut di browser utama.</p>
+            <p className="text-[9px] text-muted italic mt-6 text-center">*Sistem gerbang pembayaran akan meminta scan QRIS setelah Anda membuka link tersebut di browser utama.</p>
           </div>
         </div>
       )}

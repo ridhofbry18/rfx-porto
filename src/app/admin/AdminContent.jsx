@@ -4,7 +4,6 @@ import React, { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabaseClient';
 import { useData } from '@/components/DataProvider';
 import PanelAdmin from '@/components/PanelAdmin';
-import TransitionEffect from '@/components/TransitionEffect';
 import { normalizePricelistPayload } from '@/utils/helpers';
 
 const AdminContent = () => {
@@ -274,7 +273,6 @@ const AdminContent = () => {
 
   return (
     <>
-      <TransitionEffect />
       <PanelAdmin
         isAdminRoute={true}
         modalAdminBuka={modalAdminBuka} setModalAdminBuka={setModalAdminBuka}
